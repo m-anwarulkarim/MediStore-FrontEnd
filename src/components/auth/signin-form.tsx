@@ -19,6 +19,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 // ================================
 // Zod Schema
@@ -41,26 +42,44 @@ export function SignInForm() {
     },
     onSubmit: async ({ value, formApi }) => {
       try {
+        const res = await authClient.signIn.email({
+          email: value.email,
+          password: value.password,
+        });
+
+        if (res.error || !res.data) {
+          throw new Error(res.error?.message || "Invalid email or password");
+        }
+
+        const user: any = res.data.user;
+        console.log("Logged in user:", user);
         toast.success("Login successful!");
         formApi.reset();
 
-        // Dashboard বা home page e redirect
-        router.push("/");
-        router.refresh(); // Session update korar jonno
+        if (user?.role === "ADMIN") router.push("/admin");
+        else if (user?.role === "SELLER") router.push("/dashboard");
+        else router.push("/");
+
+        router.refresh();
       } catch (error: any) {
         toast.error(error.message || "Login failed. Please try again.");
-        console.error(error);
+        console.error("Login error:", error);
       }
     },
   });
 
-  const handleGoogleLogin = async () => {
-    try {
-    } catch (error) {
-      toast.error("Google login failed");
-      console.error(error);
-    }
-  };
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     const data = authClient.signIn.social({
+  //       provider: "google",
+  //       callbackURL: "http://localhost:3000",
+  //     });
+  //     // toast.success("Login successfyll!");
+  //   } catch (error: any) {
+  //     toast.error(error.message || "Google login failed");
+  //     console.error("Google login error:", error);
+  //   }
+  // };
 
   return (
     <Card className="w-full max-w-md mx-auto mt-10">
@@ -153,17 +172,17 @@ export function SignInForm() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                {/* Or continue with */}
               </span>
             </div>
           </div>
-
+          {/* 
           {/* Google Login Button */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full"
-            onClick={handleGoogleLogin}
+            onClick={() => handleGoogleLogin()}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
               <path
@@ -184,7 +203,7 @@ export function SignInForm() {
               />
             </svg>
             Continue with Google
-          </Button>
+          </Button>  */}
         </form>
       </CardContent>
 

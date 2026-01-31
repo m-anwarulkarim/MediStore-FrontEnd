@@ -17,13 +17,12 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name is required"),
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password too short"),
-  role: z.enum(["SELLER", "CUSTOMER"]),
+  role: z.enum(["SELLER", "CUSTOMER", "ADMIN"]),
 });
 
 export function RegisterForm() {
@@ -34,7 +33,7 @@ export function RegisterForm() {
       name: "",
       email: "",
       password: "",
-      role: "SELLER" as "SELLER" | "CUSTOMER",
+      role: "SELLER" as "SELLER" | "CUSTOMER" | "ADMIN",
     },
     validators: {
       onSubmit: formSchema,
@@ -42,6 +41,25 @@ export function RegisterForm() {
     // onSubmit handler:
     onSubmit: async ({ value, formApi }) => {
       try {
+        const response = await fetch(
+          "https://backend-three-pi-86.vercel.app/api/auth/sign-up/email",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(value),
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          toast.error(data.message || "Registration failed");
+          return;
+        }
+
+        toast.success("Registration successful!");
         formApi.reset();
         router.push("/login");
       } catch (error: any) {
@@ -51,17 +69,17 @@ export function RegisterForm() {
     },
   });
 
-  const handleGoogleLogin = async () => {
-    try {
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "http://localhost:3000/login",
-      });
-    } catch (error) {
-      toast.error("Google login failed");
-      console.error(error);
-    }
-  };
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     await authClient.signIn.social({
+  //       provider: "google",
+  //       callbackURL: "http://localhost:3000/login",
+  //     });
+  //   } catch (error) {
+  //     toast.error("Google login failed");
+  //     console.error(error);
+  //   }
+  // };
   return (
     <Card className="w-full max-w-md mx-auto mt-10">
       <CardHeader>
@@ -187,13 +205,13 @@ export function RegisterForm() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
+                {/* Or continue with */}
               </span>
             </div>
           </div>
 
           {/* Google Login Button */}
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full"
@@ -218,7 +236,7 @@ export function RegisterForm() {
               />
             </svg>
             Continue with Google
-          </Button>
+          </Button> */}
         </form>
       </CardContent>
 

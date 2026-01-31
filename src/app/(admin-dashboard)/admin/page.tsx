@@ -1,7 +1,9 @@
-import React from "react";
+import { getAllUsers } from "../../../../test/admin";
 
-const AdminDashboardPage = async () => {
-  return <div>AdminDashboardPage</div>;
+const AdminMainPage = async () => {
+  const data = await getAllUsers();
+  console.log(data);
+  return <div></div>;
 };
 
-export default AdminDashboardPage;
+export default AdminMainPage;

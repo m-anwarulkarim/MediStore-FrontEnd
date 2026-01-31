@@ -1,9 +1,10 @@
+import AdminPage from "@/components/admin/page";
 import React, { ReactNode } from "react";
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>
-      <div>admin dashboard layout </div>
+      <AdminPage />
       {children}
     </div>
   );
