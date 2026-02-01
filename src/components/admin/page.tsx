@@ -13,14 +13,25 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { ProfileFormType } from "@/schemas/profile.schema";
+import ProfileCard from "../auth/profile-card";
 
 export default function AdminPage() {
+  const user: ProfileFormType = {
+    name: "Anwarul Karim",
+    email: "anwarul@gmail.com",
+    image: "/avatar.png",
+    phone: "017xxxxxxxx",
+    role: "Admin",
+    status: "Active",
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1" />
+      <SidebarInset className="overflow-y-auto">
+        <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center gap-2 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:left-[var(--sidebar-width)]">
+          <SidebarTrigger />
           <Separator
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
@@ -40,12 +51,7 @@ export default function AdminPage() {
           </Breadcrumb>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+          <ProfileCard user={user} />
         </div>
       </SidebarInset>
     </SidebarProvider>

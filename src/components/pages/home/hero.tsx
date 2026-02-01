@@ -3,7 +3,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export default function HeroSction() {
+export default function HeroSction({ data }) {
+  // console.log(data);
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="mx-auto grid w-full max-w-(--breakpoint-xl) gap-12 px-6 py-12 lg:grid-cols-2">
