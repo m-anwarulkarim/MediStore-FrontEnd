@@ -48,12 +48,13 @@ const categorySchema = z.object({
     .startsWith("http", "Image URL must start with http or https")
     .optional()
     .or(z.literal("")),
-
   description: z
     .string()
     .min(10, "Description must be at least 10 characters.")
     .max(200, "Description must be at most 200 characters."),
 });
+
+type CategoryFormValues = z.infer<typeof categorySchema>;
 
 // -------------------
 // Component
@@ -67,7 +68,7 @@ export function CreateCategoryForm() {
       name: "",
       image: "",
       description: "",
-    } as any,
+    } as CategoryFormValues,
     validators: {
       onSubmit: categorySchema,
     },
@@ -78,23 +79,33 @@ export function CreateCategoryForm() {
         ...value,
         image: value.image?.trim() ? value.image : undefined,
       };
-      console.log(value);
-      const { data, error, status } = await clientFetch("/api/categories", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      console.log(data);
-      if (status === 200 || status === 201) {
-        toast.success("Category created successfully!", data.message);
 
-        form.reset();
-        router.refresh();
-      } else {
-        const errorMsg = error?.message || "Failed to create category";
-        toast.error(`Error ${status}: ${errorMsg}`);
+      try {
+        const { data, error, status } = await clientFetch("/api/categories", {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        if (status === 200 || status === 201) {
+          toast.success("Category created successfully!", data.message);
+
+          // ফর্ম রিসেট করা
+          form.reset();
+
+          // ক্যাটাগরি লিস্ট পেজে পাঠিয়ে দেওয়া
+          router.push("/dashboard/category");
+
+          // সার্ভার ডাটা রিফ্রেশ করা
+          router.refresh();
+        } else {
+          const errorMsg = error?.message || "Failed to create category";
+          toast.error(`Error ${status}: ${errorMsg}`);
+        }
+      } catch (err: any) {
+        toast.error("An unexpected error occurred.", err.message);
+      } finally {
+        setIsPending(false);
       }
-
-      setIsPending(false);
     },
   });
 
@@ -181,7 +192,7 @@ export function CreateCategoryForm() {
                         value={field.state.value}
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        placeholder="Describe the medicines in this category..."
+                        placeholder="Describe the medicines..."
                         rows={4}
                         className="min-h-20 resize-none"
                       />
@@ -220,7 +231,7 @@ export function CreateCategoryForm() {
           {isPending ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            "Save Category"
+            "Create Category"
           )}
         </Button>
       </CardFooter>

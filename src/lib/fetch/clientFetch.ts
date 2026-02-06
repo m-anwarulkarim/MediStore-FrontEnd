@@ -26,10 +26,9 @@ export async function clientFetch<T = any>(
       ...(options.headers || {}),
     };
 
-    // Full URL log (development এ helpful)
     const fullURL = `${baseURL}${url}`;
     if (process.env.NODE_ENV === "development") {
-      console.log(`[clientFetch] ${options.method || "GET"} ${fullURL}`);
+      // console.log(`[clientFetch] ${options.method || "GET"} ${fullURL}`);
     }
 
     const response = await fetch(fullURL, {
@@ -37,7 +36,6 @@ export async function clientFetch<T = any>(
       headers,
       credentials: "include",
     });
-    console.log(response);
     // Content type check
     const contentType = response.headers.get("content-type");
     const isJson = contentType?.includes("application/json");

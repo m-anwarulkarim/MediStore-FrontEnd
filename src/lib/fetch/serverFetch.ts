@@ -16,7 +16,6 @@ export async function serverFetch<T = any>(
   try {
     const cookieStore = await cookies();
 
-    // সঠিকভাবে cookie header তৈরি করা
     const cookieHeader = cookieStore.toString();
 
     const headers = {
@@ -30,7 +29,7 @@ export async function serverFetch<T = any>(
       {
         ...options,
         headers,
-        credentials: "include", // এটি যোগ করুন
+        credentials: "include",
       },
     );
 

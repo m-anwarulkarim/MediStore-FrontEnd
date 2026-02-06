@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-export default function HeroSction({ data }) {
+export default function HeroSction() {
   // console.log(data);
   return (
     <div className="flex min-h-screen items-center justify-center">

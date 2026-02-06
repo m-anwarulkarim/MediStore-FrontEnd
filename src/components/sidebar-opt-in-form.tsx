@@ -1,17 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
-import Link from "next/link";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function SidebarOptInForm() {
   return (
     <Card className="gap-2 py-4 shadow-none">
       <CardHeader className="px-4">
+        <CardTitle className="text-sm">Subscribe to our newsletter</CardTitle>
         <Button
-          asChild
           className="bg-sidebar-primary text-sidebar-primary-foreground w-full shadow-none"
           size="sm"
         >
-          <Link href={"/admin/profile"}>PR</Link>
+          Subscribe
         </Button>
       </CardHeader>
     </Card>
