@@ -1,5 +1,4 @@
-// app/dashboard/category/[id]/page.tsx (বা আপনার পেজ পাথ অনুযায়ী)
-import { UpdateCategoryForm } from "@/components/layout/category/updateCategory";
+import { UpdateCategoryForm } from "@/components/layout/category/updateCategoryForm";
 
 interface PageProps {
   params: Promise<{ id: string }>;

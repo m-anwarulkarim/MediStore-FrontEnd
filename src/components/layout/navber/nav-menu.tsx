@@ -4,9 +4,11 @@ import Link from "next/link";
 import type { ComponentProps } from "react";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/layout/navber/navigation-menu";
 
@@ -18,20 +20,62 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
           <Link href="/">Home</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
+
       <NavigationMenuItem>
         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-          <Link href="/category">Shop</Link>
+          <Link href="/cart">Shop/cart</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
+
       <NavigationMenuItem>
         <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
           <Link href="/products">Products</Link>
         </NavigationMenuLink>
       </NavigationMenuItem>
+
       <NavigationMenuItem>
-        <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-          <Link href="#">Contact Us</Link>
-        </NavigationMenuLink>
+        <NavigationMenuTrigger className={navigationMenuTriggerStyle()}>
+          More
+        </NavigationMenuTrigger>
+
+        <NavigationMenuContent>
+          <div className="w-[260px] p-2">
+            <Link
+              href="/orders"
+              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              Order
+            </Link>
+
+            <Link
+              href="/about"
+              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              About Us
+            </Link>
+
+            <Link
+              href="/contact"
+              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              Contact Us
+            </Link>
+
+            <Link
+              href="/faq"
+              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              FAQ
+            </Link>
+
+            <Link
+              href="/privacy-policy"
+              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              Privacy Policy
+            </Link>
+          </div>
+        </NavigationMenuContent>
       </NavigationMenuItem>
     </NavigationMenuList>
   </NavigationMenu>

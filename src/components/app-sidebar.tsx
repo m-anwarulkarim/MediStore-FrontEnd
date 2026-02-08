@@ -27,63 +27,22 @@ const data = {
           url: "/dashboard/create-category",
         },
         {
-          title: "Project Structure",
-          url: "/dashboard/update-category",
+          title: "All category",
+          url: "/dashboard/category",
         },
       ],
     },
     {
-      title: "Building Your Application",
-      url: "#",
+      title: "Medicine ",
+      url: "/dashboard/create-medicine",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: "create Medicine",
+          url: "/dashboard/create-medicine",
         },
         {
-          title: "Data Fetching",
-          url: "#",
-          isActive: true,
-        },
-        {
-          title: "Rendering",
-          url: "#",
-        },
-        {
-          title: "Caching",
-          url: "#",
-        },
-        {
-          title: "Styling",
-          url: "#",
-        },
-        {
-          title: "Optimizing",
-          url: "#",
-        },
-        {
-          title: "Configuring",
-          url: "#",
-        },
-        {
-          title: "Testing",
-          url: "#",
-        },
-        {
-          title: "Authentication",
-          url: "#",
-        },
-        {
-          title: "Deploying",
-          url: "#",
-        },
-        {
-          title: "Upgrading",
-          url: "#",
-        },
-        {
-          title: "Examples",
-          url: "#",
+          title: "All Medicine",
+          url: "/dashboard/medicines",
         },
       ],
     },

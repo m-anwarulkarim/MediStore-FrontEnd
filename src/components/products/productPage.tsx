@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
+import { cartService } from "@/services/cart/cart.service";
 
 interface Product {
   id: string | number;
@@ -20,16 +22,33 @@ interface MedicineCardProps {
 }
 
 const MedicineCard = ({ medicines }: MedicineCardProps) => {
-  // প্রতিটি প্রোডাক্টের জন্য আলাদা কোয়ান্টিটি স্টেট
-  const [quantities, setQuantities] = useState<{ [key: string]: number }>(
-    medicines.reduce((acc, product) => ({ ...acc, [product.id]: 1 }), {}),
+  const [quantities, setQuantities] = useState<Record<string, number>>(
+    Object.fromEntries(medicines.map((p) => [String(p.id), 1])),
   );
 
   const handleQuantityChange = (id: string | number, delta: number) => {
+    const key = String(id);
     setQuantities((prev) => ({
       ...prev,
-      [id]: Math.max(1, (prev[id.toString()] || 1) + delta),
+      [key]: Math.max(1, (prev[key] || 1) + delta),
     }));
+  };
+
+  const handleAddToCart = async (product: Product) => {
+    const key = String(product.id);
+    const qty = quantities[key] || 1;
+
+    const res = await cartService.addToCart({
+      medicineId: product.id,
+      quantity: qty,
+    });
+
+    if (res.error) {
+      toast.error(res.error.message || "Failed to add to cart");
+      return;
+    }
+
+    toast.success("Added to cart!");
   };
 
   return (
@@ -44,7 +63,6 @@ const MedicineCard = ({ medicines }: MedicineCardProps) => {
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {medicines.map((product) => {
-            // সেফলি প্রাইস কনভার্ট করা (যেহেতু এপিআই থেকে স্ট্রিং '55' আসছে)
             const price =
               typeof product.price === "string"
                 ? parseFloat(product.price)
@@ -105,6 +123,7 @@ const MedicineCard = ({ medicines }: MedicineCardProps) => {
                 <Button
                   className="mt-6 w-full rounded-full font-semibold"
                   size="lg"
+                  onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
                 </Button>

@@ -1,29 +1,35 @@
+/**
+ * Path: app/dashboard/medicines/page.tsx
+ * Description: সেলারের সব মেডিসিন দেখার মেইন পেজ (অরিজিনাল স্টাইল)।
+ */
+
 import React from "react";
-import { clientFetch } from "@/lib/fetch/clientFetch";
 import { Button } from "@/components/ui/button";
 import { Plus, LayoutDashboardIcon } from "lucide-react";
 import Link from "next/link";
-import CategoryList from "./CategoryList";
 import { serverFetch } from "@/lib/fetch/serverFetch";
+import MedicineList from "./medicineList";
 
-const ViewAllCategory = async () => {
-  const { data, error } = await serverFetch("/api/categories", {
+const ViewAllMedicines = async () => {
+  // ডাটা ফেচিং
+  const { data, error } = await serverFetch("/api/medicines", {
     method: "GET",
     cache: "no-store",
   });
 
-  const categoriesArray = data?.data || [];
+  // ডাটা চেক (আপনার JSON ডাটা অনুযায়ী data.data নেওয়া হয়েছে)
+  const medicinesArray = data?.data || [];
 
   return (
     <div className="flex min-h-screen items-center justify-center py-12">
       <div className="w-full max-w-7xl px-6">
-        {/* Header Section - Exactly as your style */}
+        {/* Header Section - হুবহু আপনার দেওয়া ডিজাইন */}
         <div className="text-center space-y-4">
           <h2 className="font-semibold text-4xl tracking-tight sm:text-5xl">
-            Explore Medistor Categories
+            Explore Medistor medicines
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Easily manage, edit, or remove your medicine categories from here.
+            Easily manage, edit, or remove your medicines from here.
           </p>
 
           <div className="flex justify-center gap-4 mt-8">
@@ -31,8 +37,8 @@ const ViewAllCategory = async () => {
               asChild
               className="rounded-full px-6 shadow-md transition-transform hover:scale-105"
             >
-              <Link href="/dashboard/create-category">
-                <Plus className="mr-2 h-4 w-4" /> Create Category
+              <Link href="/dashboard/create-medicine">
+                <Plus className="mr-2 h-4 w-4" /> Create medicines
               </Link>
             </Button>
             <Button variant="outline" asChild className="rounded-full px-6">
@@ -43,24 +49,24 @@ const ViewAllCategory = async () => {
           </div>
         </div>
 
-        {/* Category List Area */}
+        {/* Medicine List Area */}
         <div className="mt-10 sm:mt-16">
           {error ? (
             <div className="text-center py-10 border-2 border-dashed rounded-xl text-destructive">
-              Failed to load categories.
+              Failed to load medicines.
             </div>
           ) : (
-            <CategoryList initialCategories={categoriesArray} />
+            <MedicineList initialMedicines={medicinesArray} />
           )}
         </div>
 
-        {/* Optional: Simple Footer info */}
+        {/* Footer info */}
         <div className="mt-16 text-center text-sm text-muted-foreground">
-          Total {categoriesArray.length} categories available in your store.
+          Total {medicinesArray.length} medicines available in your store.
         </div>
       </div>
     </div>
   );
 };
 
-export default ViewAllCategory;
+export default ViewAllMedicines;

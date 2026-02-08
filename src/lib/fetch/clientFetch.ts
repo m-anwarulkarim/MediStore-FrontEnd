@@ -1,76 +1,85 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
 interface ClientFetchResponse<T> {
   data: T | null;
-  error: any;
+  error: {
+    message: string;
+    details?: any;
+    statusText?: string;
+  } | null;
   status: number;
 }
 
 export async function clientFetch<T = any>(
   url: string,
-  options: RequestInit = {},
+  options: RequestInit & { queryParams?: Record<string, string | number> } = {},
 ): Promise<ClientFetchResponse<T>> {
   try {
-    //  Environment variable check
     const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
     if (!baseURL) {
-      console.error("NEXT_PUBLIC_BACKEND_URL is not configured");
       return {
         data: null,
-        error: { message: "API base URL is not configured" },
+        error: {
+          message: "API base URL is not configured in environment variables",
+        },
         status: 0,
       };
     }
 
-    const headers = {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    };
+    const urlObj = new URL(url.startsWith("http") ? url : `${baseURL}${url}`);
 
-    const fullURL = `${baseURL}${url}`;
-    if (process.env.NODE_ENV === "development") {
-      // console.log(`[clientFetch] ${options.method || "GET"} ${fullURL}`);
+    if (options.queryParams) {
+      Object.entries(options.queryParams).forEach(([key, value]) => {
+        urlObj.searchParams.append(key, String(value));
+      });
     }
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      ...options.headers,
+    });
 
-    const response = await fetch(fullURL, {
+    const response = await fetch(urlObj.toString(), {
       ...options,
       headers,
       credentials: "include",
     });
-    // Content type check
+
     const contentType = response.headers.get("content-type");
     const isJson = contentType?.includes("application/json");
 
     if (!response.ok) {
       let errorData;
-
       try {
-        errorData = isJson
-          ? await response.json()
-          : { message: await response.text() };
+        errorData = isJson ? await response.json() : await response.text();
       } catch {
-        errorData = {
-          message: `HTTP Error ${response.status}: ${response.statusText}`,
-        };
+        errorData = { message: "Could not parse error response" };
       }
 
-      //  Development এ error log
       if (process.env.NODE_ENV === "development") {
-        console.error(`[clientFetch Error] ${response.status}:`, errorData);
+        console.error(`[Fetch Error ${response.status}]:`, errorData);
       }
 
       return {
         data: null,
-        error: errorData,
+        error: {
+          message: errorData?.message || "Something went wrong",
+          details: errorData,
+          statusText: response.statusText,
+        },
         status: response.status,
       };
     }
 
-    // Response parsing with error handling
-    let data;
+    let data: T;
     try {
-      data = isJson ? await response.json() : await response.text();
+      if (response.status === 204) {
+        data = null as T;
+      } else {
+        data = isJson ? await response.json() : await response.text();
+      }
     } catch (parseError) {
-      console.error("Failed to parse response:", parseError);
       return {
         data: null,
         error: { message: "Failed to parse server response" },
@@ -83,13 +92,19 @@ export async function clientFetch<T = any>(
       error: null,
       status: response.status,
     };
-  } catch (error) {
-    console.error("Client fetch error:", error);
+  } catch (error: any) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("[clientFetch Critical Error]:", error);
+    }
+
     return {
       data: null,
       error: {
-        message: error instanceof Error ? error.message : "Network error",
-        originalError: error,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Network or Connection Error",
+        details: error,
       },
       status: 0,
     };

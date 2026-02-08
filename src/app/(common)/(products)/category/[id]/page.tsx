@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import MedicineCard from "@/components/layout/products/productPage";
+import MedicineCard from "@/components/products/productPage";
 import { serverFetch } from "@/lib/fetch/serverFetch";
 interface PageProps {
   params: { id: string };

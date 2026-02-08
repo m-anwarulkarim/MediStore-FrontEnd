@@ -1,4 +1,4 @@
-import CetagoryCard from "@/components/pages/home/cetagory";
+import CetagoryCard from "@/components/cetagoryCard";
 import { serverFetch } from "@/lib/fetch/serverFetch";
 
 const CategoryPage = async () => {
