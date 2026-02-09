@@ -7,6 +7,7 @@ import { CategoriesSummaryCard } from "./dashboard/components/CategoriesSummaryC
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { MedicinesSummaryCard } from "./dashboard/components/MedicinesSummaryCard";
 
 const AdminPage = async () => {
   const [usersRes, ordersRes, medicinesRes, categoriesRes] = await Promise.all([
@@ -29,7 +30,7 @@ const AdminPage = async () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <UsersSummaryCard total={totalUsers} />
         <OrdersSummaryCard total={totalOrders} />
-        <CategoriesSummaryCard total={totalMedicines} />
+        <MedicinesSummaryCard total={totalMedicines} />
         <CategoriesSummaryCard total={totalCategories} />
       </div>
 

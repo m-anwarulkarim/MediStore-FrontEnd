@@ -8,5 +8,24 @@ export type Medicine = {
   category?: { id: string; name: string } | null;
   seller?: { id: string; name: string; email?: string } | null;
   createdAt?: string;
-  // status?: "PUBLISHED" | "DRAFT" | "BLOCKED"; // যদি তোমার model এ থাকে
+};
+export type SellerMedicine = {
+  id: string;
+  name: string;
+  price: number;
+  discountPrice?: number | null;
+
+  manufacturer: string;
+  description: string;
+
+  dosageForm?: string | null;
+  strength?: string | null;
+  prescriptionRequired?: boolean | null;
+
+  images?: string[] | null;
+
+  category?: { id: string; name: string } | null;
+  categoryId?: string;
+  stock: number;
+  isActive?: boolean;
 };

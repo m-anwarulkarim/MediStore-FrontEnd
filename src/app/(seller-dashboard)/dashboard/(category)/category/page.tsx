@@ -1,66 +1,81 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { clientFetch } from "@/lib/fetch/clientFetch";
+import type { Category } from "@/components/types/category";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CategoryFormDialog } from "@/components/admin/categories/CategoryFormDialog";
+import { CategoriesTable } from "@/components/admin/categories/CategoriesTable";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutDashboardIcon } from "lucide-react";
-import Link from "next/link";
-import CategoryList from "./CategoryList";
-import { serverFetch } from "@/lib/fetch/serverFetch";
 
-const ViewAllCategory = async () => {
-  const { data, error } = await serverFetch("/api/categories", {
-    method: "GET",
-    cache: "no-store",
-  });
-
-  const categoriesArray = data?.data || [];
-
-  return (
-    <div className="flex min-h-screen items-center justify-center py-12">
-      <div className="w-full max-w-7xl px-6">
-        {/* Header Section - Exactly as your style */}
-        <div className="text-center space-y-4">
-          <h2 className="font-semibold text-4xl tracking-tight sm:text-5xl">
-            Explore Medistor Categories
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Easily manage, edit, or remove your medicine categories from here.
-          </p>
-
-          <div className="flex justify-center gap-4 mt-8">
-            <Button
-              asChild
-              className="rounded-full px-6 shadow-md transition-transform hover:scale-105"
-            >
-              <Link href="/dashboard/create-category">
-                <Plus className="mr-2 h-4 w-4" /> Create Category
-              </Link>
-            </Button>
-            <Button variant="outline" asChild className="rounded-full px-6">
-              <Link href="/dashboard">
-                <LayoutDashboardIcon className="mr-2 h-4 w-4" /> Dashboard
-              </Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Category List Area */}
-        <div className="mt-10 sm:mt-16">
-          {error ? (
-            <div className="text-center py-10 border-2 border-dashed rounded-xl text-destructive">
-              Failed to load categories.
-            </div>
-          ) : (
-            <CategoryList initialCategories={categoriesArray} />
-          )}
-        </div>
-
-        {/* Optional: Simple Footer info */}
-        <div className="mt-16 text-center text-sm text-muted-foreground">
-          Total {categoriesArray.length} categories available in your store.
-        </div>
-      </div>
-    </div>
-  );
+type CategoriesApiResponse = {
+  success: boolean;
+  data: Category[];
+  message?: string;
 };
 
-export default ViewAllCategory;
+export default function AdminCategoriesPage() {
+  const [items, setItems] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const total = useMemo(() => items.length, [items]);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await clientFetch<CategoriesApiResponse>("/api/categories", {
+        method: "GET",
+      });
+
+      if (res.error) throw new Error(res.error.message);
+
+      // server returns: { success, data: [...] }
+      const list = res.data?.data ?? [];
+      setItems(Array.isArray(list) ? list : []);
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to load categories");
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  return (
+    <div className="space-y-4">
+      <Card className="rounded-2xl">
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <CardTitle>Categories</CardTitle>
+
+          <CategoryFormDialog
+            mode="create"
+            onSuccess={load}
+            trigger={
+              <Button className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground">
+                Add Category
+              </Button>
+            }
+          />
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          <div className="text-sm opacity-70">Total: {total}</div>
+
+          {loading ? (
+            <div className="py-10 text-center text-sm opacity-70">
+              Loading...
+            </div>
+          ) : (
+            <CategoriesTable categories={items} onChanged={load} />
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

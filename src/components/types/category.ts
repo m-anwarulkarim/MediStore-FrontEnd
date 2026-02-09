@@ -6,3 +6,12 @@ export type Category = {
   totalMedicines?: number;
   _count?: { medicines?: number };
 };
+
+export type SellerCategory = {
+  id: string;
+  name: string;
+  description?: string | null;
+  _count?: {
+    medicines?: number;
+  };
+};
