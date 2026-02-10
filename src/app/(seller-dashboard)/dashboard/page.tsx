@@ -51,7 +51,7 @@ const SellerPage = async () => {
           </Link>
 
           <Link
-            href="/dashboard/medicines"
+            href="/dashboard/products"
             className="text-sm text-primary hover:underline"
           >
             Manage Medicines →

@@ -1,21 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Feature from "@/components/pages/home/feature";
 import HeroSction from "@/components/pages/home/hero";
-import CategoryPage from "./(products)/category/page";
-import MedicinesPage from "./(products)/medicines/page";
+import HomeCategoriesSection from "@/components/pages/home/home-categories-section";
+import HomeFlashSaleSection from "@/components/pages/home/home-flash-sale-section";
+import HomeMedicinesSection from "@/components/pages/home/home-medicines-section";
 
 const HomePage = async () => {
   return (
     <div className="min-h-screen">
       <HeroSction />
-      <CategoryPage />
-
-      <section className="py-16 container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8"></div>
-
-        <MedicinesPage />
-      </section>
-      <Feature />
+      <HomeCategoriesSection />
+      <HomeFlashSaleSection />
+      <HomeMedicinesSection />
     </div>
   );
 };

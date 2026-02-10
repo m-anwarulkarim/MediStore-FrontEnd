@@ -4,8 +4,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import { UsersTable } from "@/components/admin/users/UsersTable";
 import { User } from "@/components/types/user";
+import { UsersTable } from "@/components/admin/users/UsersTable";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);

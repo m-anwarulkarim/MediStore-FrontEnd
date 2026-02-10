@@ -40,7 +40,7 @@ const data = {
       url: "/dashboard/reviews",
     },
     {
-      title: "My Shop",
+      title: "My Profile",
       url: "/dashboard/profile",
     },
   ],

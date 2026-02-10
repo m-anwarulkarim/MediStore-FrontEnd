@@ -48,11 +48,9 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
             </Link>
 
             <Link
-              href="/about"
+              href="/profile"
               className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              About Us
-            </Link>
+            ></Link>
 
             <Link
               href="/contact"

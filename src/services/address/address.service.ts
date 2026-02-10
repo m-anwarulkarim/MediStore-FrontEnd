@@ -27,25 +27,38 @@ export type CreateAddressPayload = {
   isDefault?: boolean;
 };
 
+type ApiResponse<T> = {
+  success: boolean;
+  message: string;
+  data: T;
+};
+
 export const addressService = {
   getMyAddresses: async () => {
-    return clientFetch<{ success: boolean; data: Address[] }>(
-      "/api/address/my-addresses",
-      { method: "GET" },
-    );
+    return clientFetch<ApiResponse<Address[]>>("/api/address/my-addresses", {
+      method: "GET",
+    });
   },
 
+  //  Create address
   createAddress: async (payload: CreateAddressPayload) => {
-    return clientFetch("/api/address", {
+    return clientFetch<ApiResponse<Address>>("/api/address", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
-  // --------------------
-  // DELETE address  ✅ (এইটাই missing ছিল)
-  // --------------------
+
+  //  Update address
+  updateAddress: async (id: string, payload: Partial<CreateAddressPayload>) => {
+    return clientFetch<ApiResponse<Address>>(`/api/address/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  //  Delete address
   deleteAddress: async (id: string) => {
-    return clientFetch(`/api/address/${id}`, {
+    return clientFetch<ApiResponse<Address>>(`/api/address/${id}`, {
       method: "DELETE",
     });
   },

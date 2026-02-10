@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { User } from "@/components/types/user";
 import { StatusSelect } from "./StatusSelect";
 

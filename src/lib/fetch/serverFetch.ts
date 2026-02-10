@@ -9,13 +9,27 @@ interface ServerFetchResponse<T> {
   status: number;
 }
 
+const getBaseUrl = () => {
+  const base = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+  if (!base) {
+    throw new Error("NEXT_PUBLIC_BACKEND_URL is not defined");
+  }
+
+  return base.endsWith("/") ? base : `${base}/`;
+};
+
+const normalizePath = (path: string) => {
+  if (!path) return "";
+  return path.startsWith("/") ? path.slice(1) : path;
+};
+
 export async function serverFetch<T = any>(
   url: string,
   options: RequestInit = {},
 ): Promise<ServerFetchResponse<T>> {
   try {
     const cookieStore = await cookies();
-
     const cookieHeader = cookieStore.toString();
 
     const headers = {
@@ -24,16 +38,16 @@ export async function serverFetch<T = any>(
       ...(options.headers || {}),
     };
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`,
-      {
-        ...options,
-        headers,
-        credentials: "include",
-      },
-    );
+    const baseUrl = getBaseUrl();
+    const finalUrl = new URL(normalizePath(url), baseUrl).toString();
 
-    // Response parsing
+    const response = await fetch(finalUrl, {
+      ...options,
+      headers,
+      credentials: "include",
+      cache: "no-store",
+    });
+
     const contentType = response.headers.get("content-type");
     const isJson = contentType?.includes("application/json");
 
@@ -58,6 +72,7 @@ export async function serverFetch<T = any>(
     };
   } catch (error) {
     console.error("Server fetch error:", error);
+
     return {
       data: null,
       error: error instanceof Error ? error.message : "Network error",

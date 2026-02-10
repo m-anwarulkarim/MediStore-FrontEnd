@@ -19,27 +19,32 @@ const data = {
     {
       title: "Dashboard",
       url: "/admin",
-      items: [{ title: "Overview", url: "/admin" }],
+      // items: [{ title: "Overview", url: "/admin" }],
     },
     {
       title: "Users",
       url: "/admin/users",
-      items: [{ title: "All Users", url: "/admin/users" }],
+      // items: [{ title: "All Users", url: "/admin/users" }],
     },
     {
       title: "Categories",
       url: "/admin/categories",
-      items: [{ title: "Manage Categories", url: "/admin/categories" }],
+      // items: [{ title: "Manage Categories", url: "/admin/categories" }],
     },
     {
       title: "Medicines",
       url: "/admin/medicines",
-      items: [{ title: "All Medicines", url: "/admin/medicines" }],
+      // items: [{ title: "All Medicines", url: "/admin/medicines" }],
     },
     {
       title: "Orders",
       url: "/admin/orders",
-      items: [{ title: "All Orders", url: "/admin/orders" }],
+      // items: [{ title: "All Orders", url: "/admin/orders" }],
+    },
+    {
+      title: "My Profile",
+      url: "/admin/profile",
+      // items: [{ title: "All Orders", url: "/admin/orders" }],
     },
   ],
 };
