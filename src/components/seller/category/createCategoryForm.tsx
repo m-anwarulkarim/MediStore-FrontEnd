@@ -89,13 +89,10 @@ export function CreateCategoryForm() {
         if (status === 200 || status === 201) {
           toast.success("Category created successfully!", data.message);
 
-          // ফর্ম রিসেট করা
           form.reset();
 
-          // ক্যাটাগরি লিস্ট পেজে পাঠিয়ে দেওয়া
-          router.push("/dashboard/category");
+          router.push("/dashboard/categories");
 
-          // সার্ভার ডাটা রিফ্রেশ করা
           router.refresh();
         } else {
           const errorMsg = error?.message || "Failed to create category";

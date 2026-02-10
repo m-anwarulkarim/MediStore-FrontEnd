@@ -84,7 +84,7 @@ export function UpdateCategoryForm({ initialData }: UpdateCategoryFormProps) {
 
         if (status === 200 || status === 204) {
           toast.success("Category updated successfully!", data.message);
-          router.push("/dashboard/category");
+          router.push("/dashboard/categories");
           router.refresh();
         } else {
           const errorMsg = error?.message || "Failed to update category";

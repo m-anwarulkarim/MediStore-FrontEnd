@@ -1,6 +1,7 @@
 "use client";
 
 import { MoreHorizontal, type LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -15,51 +16,66 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
-}) {
+type NavItem = {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: { title: string; url: string }[];
+};
+
+export function NavMain({ items }: { items: NavItem[] }) {
   const { isMobile } = useSidebar();
 
   return (
     <SidebarGroup>
       <SidebarMenu>
-        {items.map((item) => (
-          <DropdownMenu key={item.title}>
-            <SidebarMenuItem>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  {item.title} <MoreHorizontal className="ml-auto" />
+        {items.map((item) => {
+          const children = item.items ?? []; // fallback (never undefined)
+          const hasChildren = children.length > 0;
+
+          // direct link (no dropdown)
+          if (!hasChildren) {
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    {item.icon ? <item.icon className="size-4" /> : null}
+                    <span>{item.title}</span>
+                  </Link>
                 </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              {item.items?.length ? (
+              </SidebarMenuItem>
+            );
+          }
+
+          //  dropdown version
+          return (
+            <DropdownMenu key={item.title}>
+              <SidebarMenuItem>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                    {item.icon ? <item.icon className="size-4" /> : null}
+                    <span>{item.title}</span>
+                    <MoreHorizontal className="ml-auto size-4" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+
                 <DropdownMenuContent
                   side={isMobile ? "bottom" : "right"}
                   align={isMobile ? "end" : "start"}
                   className="min-w-56 rounded-lg"
                 >
-                  {item.items.map((item) => (
-                    <DropdownMenuItem asChild key={item.title}>
-                      <Link href={item.url}>{item.title}</Link>
+                  {children.map((child) => (
+                    <DropdownMenuItem asChild key={child.title}>
+                      <Link href={child.url}>{child.title}</Link>
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
-              ) : null}
-            </SidebarMenuItem>
-          </DropdownMenu>
-        ))}
+              </SidebarMenuItem>
+            </DropdownMenu>
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   );

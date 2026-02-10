@@ -17,7 +17,7 @@ type CategoriesApiResponse = {
   message?: string;
 };
 
-export default function AdminCategoriesPage() {
+export default function SellerCategoriesPage() {
   const [items, setItems] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 

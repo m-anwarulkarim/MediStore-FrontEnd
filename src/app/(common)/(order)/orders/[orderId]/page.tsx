@@ -174,6 +174,7 @@ export default function OrderDetailsPage() {
                   <ReviewDialog
                     medicineId={String(it.medicine.id)}
                     medicineName={it.medicine.name}
+                    orderId={order.id}
                   />
                 ) : null}
               </div>

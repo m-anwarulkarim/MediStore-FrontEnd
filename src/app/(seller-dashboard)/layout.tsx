@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
+import ReactQueryProvider from "@/components/provider/ReactQueryProvider";
 
 export default function DashboardLayout({
   children,
@@ -46,7 +47,9 @@ export default function DashboardLayout({
           </Breadcrumb>
         </header>
         <main className="flex-1 overflow-y-auto p-4">
-          <div className="flex flex-col gap-4">{children}</div>
+          <div className="flex flex-col gap-4">
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </div>
         </main>
       </SidebarInset>
     </SidebarProvider>

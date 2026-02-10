@@ -13,90 +13,35 @@ import {
 import Link from "next/link";
 import { HeartPulseIcon } from "lucide-react";
 
-// This is sample data.
+// {
+//   title: "Orders",
+//   items: [
+//     { title: "All Orders", url: "/dashboard/orders" },
+//     { title: "Pending Orders", url: "/dashboard/orders?status=pending" },
+//   ],
+// } example for dropdown
+
 const data = {
   navMain: [
-    // ------------------------
-    // Categories (Seller can create/update/delete)
-    // ------------------------
     {
       title: "Category",
-      url: "/dashboard/category",
-      items: [
-        {
-          title: "All Category",
-          url: "/dashboard/category",
-        },
-      ],
+      url: "/dashboard/categories",
     },
-
-    // ------------------------
-    // Medicines (Seller inventory)
-    // ------------------------
     {
       title: "Medicine",
       url: "/dashboard/medicines",
-      items: [
-        {
-          title: "All Medicines",
-          url: "/dashboard/medicines",
-        },
-
-        {
-          title: "Stock Management",
-          url: "/dashboard/medicines/stock",
-        },
-      ],
     },
-
-    // ------------------------
-    // Orders (incoming orders + status update)
-    // ------------------------
     {
       title: "Orders",
       url: "/dashboard/orders",
-      items: [
-        {
-          title: "Incoming Orders",
-          url: "/dashboard/orders",
-        },
-        {
-          title: "Order Status",
-          url: "/dashboard/orders/status",
-        },
-      ],
     },
-
-    // ------------------------
-    // Reviews (seller can view reviews of their medicines)
-    // ------------------------
     {
       title: "Reviews",
       url: "/dashboard/reviews",
-      items: [
-        {
-          title: "All Reviews",
-          url: "/dashboard/reviews",
-        },
-      ],
     },
-
-    // ------------------------
-    // Seller Profile
-    // ------------------------
     {
-      title: "Seller Profile",
-      url: "/dashboard/seller/profile",
-      items: [
-        {
-          title: "My Profile",
-          url: "/dashboard/seller/profile",
-        },
-        {
-          title: "Edit Profile",
-          url: "/dashboard/seller/profile/edit",
-        },
-      ],
+      title: "My Shop",
+      url: "/dashboard/profile",
     },
   ],
 };
