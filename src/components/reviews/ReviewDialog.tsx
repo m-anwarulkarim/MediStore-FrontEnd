@@ -16,7 +16,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
-import { reviewService } from "@/services/review/review.service";
 import { useMyReview } from "@/hooks/reviews/useMyReview";
 import { useCreateReview } from "@/hooks/reviews/useCreateReview";
 import { useUpdateReview } from "@/hooks/reviews/useUpdateReview";
@@ -38,13 +37,13 @@ export default function ReviewDialog({
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔹 fetch my review
+  //  fetch my review
   const { data: myReview } = useMyReview(orderId, medicineId);
 
   const createMutation = useCreateReview(medicineId);
   const updateMutation = useUpdateReview(medicineId);
 
-  // 🔹 prefill if review exists
+  //  prefill if review exists
   useEffect(() => {
     if (myReview) {
       setRating(myReview.rating);
@@ -62,7 +61,7 @@ export default function ReviewDialog({
 
     try {
       if (myReview) {
-        // ✏️ update
+        //  update
         await updateMutation.mutateAsync({
           reviewId: myReview.id,
           payload: {

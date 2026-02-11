@@ -27,7 +27,6 @@ export function NavbarSearch({
     if (q.trim()) query.set("search", q.trim());
     else query.delete("search");
 
-    // সবসময় products page-এ নিয়ে গিয়ে search করাবে
     router.push(`/products?${query.toString()}`);
   };
 

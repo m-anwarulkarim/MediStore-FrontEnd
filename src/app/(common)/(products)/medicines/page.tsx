@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import MedicineCard from "@/components/products/productPage";
 import { serverFetch } from "@/lib/fetch/serverFetch";
-import React from "react";
 
 const MedicinesPage = async () => {
   const response = await serverFetch("/api/medicines", {

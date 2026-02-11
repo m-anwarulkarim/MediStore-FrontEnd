@@ -22,11 +22,11 @@ const baseSchema = z.object({
   licenseNumber: z.string().optional(),
 });
 
-// ✅ separate create/update rules
-const formSchema = baseSchema.superRefine((val, ctx) => {
-  // create mode detect: if no initialProfile then create
-  // mode will be passed dynamically below
-});
+//  separate create/update rules
+// const formSchema = baseSchema.superRefine((val, ctx) => {
+//   // create mode detect: if no initialProfile then create
+//   // mode will be passed dynamically below
+// });
 
 type SellerFormValues = z.infer<typeof baseSchema>;
 

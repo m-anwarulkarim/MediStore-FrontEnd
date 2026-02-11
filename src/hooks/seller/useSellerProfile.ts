@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { sellerProfileService } from "@/services/seller/sellerProfile.service";
+import { sellerService } from "@/services/seller/sellerProfile.service";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSellerProfile = () => {
   return useQuery({
     queryKey: ["seller-profile-me"],
     queryFn: async () => {
-      const res = await sellerProfileService.getMyProfile();
+      const res = await sellerService.getMyProfile();
 
       // profile missing -> allow create mode
       if (res.error?.message?.includes("Seller profile not found")) {

@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2, Pill } from "lucide-react"; // Pill আইকন ব্যবহার করা হয়েছে
+import { Edit2, Trash2, Pill } from "lucide-react";
 import Link from "next/link";
 import {
   Card,

@@ -6,7 +6,7 @@ import ProfileInfoCard from "@/components/account/ProfileInfoCard";
 import AddressList from "@/components/account/AddressList";
 
 export default async function AdminProfilePage() {
-  const [meRes, addrRes, summaryRes] = await Promise.all([
+  const [meRes, addrRes /*summaryRes*/] = await Promise.all([
     userApi.me(),
     addressApi.myAddresses(),
     userApi.summary(),
@@ -14,7 +14,7 @@ export default async function AdminProfilePage() {
 
   const me = meRes.data?.data ?? null;
   const addresses = addrRes.data?.data ?? [];
-  const summary = summaryRes.data?.data ?? null;
+  // const summary = summaryRes.data?.data ?? null;
 
   return (
     <div className="min-h-screen bg-muted/30">

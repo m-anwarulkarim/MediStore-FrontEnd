@@ -1,15 +1,15 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sellerProfileService } from "@/services/seller/sellerProfile.service";
-import { UpdateSellerProfilePayload } from "@/components/types/sellerProfile.type";
+import { UpdateSellerProfilePayload } from "@/components/types/seller";
+import { sellerService } from "@/services/seller/sellerProfile.service";
 
 export const useUpdateSellerProfile = () => {
   const qc = useQueryClient();
 
   return useMutation({
     mutationFn: async (payload: UpdateSellerProfilePayload) => {
-      const res = await sellerProfileService.updateProfile(payload);
+      const res = await sellerService.updateProfile(payload);
       if (res.error) throw new Error(res.error.message);
       return res.data!;
     },

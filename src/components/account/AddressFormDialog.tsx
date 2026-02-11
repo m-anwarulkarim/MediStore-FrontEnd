@@ -30,7 +30,7 @@ type Props = {
 type FormState = {
   fullName: string;
   phone: string;
-  state: string; //  added
+  state: string;
   city: string;
   area: string;
   postalCode: string;
@@ -48,12 +48,11 @@ export default function AddressFormDialog({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // initialValue থেকে derived defaults (stable)
   const defaults: FormState = useMemo(
     () => ({
       fullName: initialValue?.fullName ?? "",
       phone: initialValue?.phone ?? "",
-      state: (initialValue as any)?.state ?? "", //  added (types এ state না থাকলে safe)
+      state: (initialValue as any)?.state ?? "",
       city: initialValue?.city ?? "",
       area: initialValue?.area ?? "",
       postalCode: initialValue?.postalCode ?? "",
@@ -69,10 +68,10 @@ export default function AddressFormDialog({
     setForm((s) => ({ ...s, [key]: value }));
   };
 
-  const validate = () => {
+  const validate = (): string | null => {
     if (!form.fullName.trim()) return "Full name is required";
     if (!form.phone.trim()) return "Phone is required";
-    if (!form.state.trim()) return "State/Division is required"; //  added
+    if (!form.state.trim()) return "State/Division is required";
     if (!form.city.trim()) return "City is required";
     if (!form.area.trim()) return "Area is required";
     if (!form.postalCode.trim()) return "Postal code is required";
@@ -85,47 +84,55 @@ export default function AddressFormDialog({
     setOpen(next);
   };
 
-  const submit = async () => {
+  // ✅ FIXED: explicit return type + no "return toast.error(...)"
+  const submit = async (): Promise<void> => {
     const err = validate();
-    if (err) return toast.error(err);
+    if (err) {
+      toast.error(err);
+      return;
+    }
 
     setLoading(true);
 
-    const payload = {
-      fullName: form.fullName.trim(),
-      phone: form.phone.trim(),
-      state: form.state.trim(), //  added
-      city: form.city.trim(),
-      area: form.area.trim(),
-      postalCode: form.postalCode.trim(),
-      addressLine: form.addressLine.trim(),
-      isDefault: form.isDefault,
-      country: "Bangladesh",
-    };
+    try {
+      const payload = {
+        fullName: form.fullName.trim(),
+        phone: form.phone.trim(),
+        state: form.state.trim(),
+        city: form.city.trim(),
+        area: form.area.trim(),
+        postalCode: form.postalCode.trim(),
+        addressLine: form.addressLine.trim(),
+        isDefault: form.isDefault,
+        country: "Bangladesh",
+      };
 
-    const res =
-      mode === "create"
-        ? await addressApi.create(payload as any)
-        : await addressApi.update(initialValue!.id, payload as any);
+      const res =
+        mode === "create"
+          ? await addressApi.create(payload as any)
+          : await addressApi.update(initialValue!.id, payload as any);
 
-    setLoading(false);
+      if (res?.error) {
+        toast.error(res.error.message);
+        return;
+      }
 
-    if (res?.error) {
-      toast.error(res.error.message);
-      return;
+      const addr = res?.data?.data as Address | undefined;
+      if (!addr) {
+        toast.error("Unexpected response from server");
+        return;
+      }
+
+      if (mode === "create") onCreated?.(addr);
+      else onUpdated?.(addr);
+
+      toast.success(res?.data?.message ?? "Saved");
+      setOpen(false);
+    } catch (e: any) {
+      toast.error(e?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    const addr = res?.data?.data as Address | undefined;
-    if (!addr) {
-      toast.error("Unexpected response from server");
-      return;
-    }
-
-    if (mode === "create") onCreated?.(addr);
-    else onUpdated?.(addr);
-
-    toast.success(res?.data?.message ?? "Saved");
-    setOpen(false);
   };
 
   return (
@@ -159,7 +166,6 @@ export default function AddressFormDialog({
             </div>
           </div>
 
-          {/*  State + City */}
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>State / Division *</Label>
@@ -179,7 +185,6 @@ export default function AddressFormDialog({
             </div>
           </div>
 
-          {/* Area + Postal */}
           <div className="grid gap-2 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Area *</Label>
@@ -199,7 +204,6 @@ export default function AddressFormDialog({
             </div>
           </div>
 
-          {/* Address line */}
           <div className="space-y-2">
             <Label>Address line *</Label>
             <Input
