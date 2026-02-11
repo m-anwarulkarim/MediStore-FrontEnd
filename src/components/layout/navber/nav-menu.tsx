@@ -50,27 +50,8 @@ export const NavMenu = (props: ComponentProps<typeof NavigationMenu>) => (
             <Link
               href="/profile"
               className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            ></Link>
-
-            <Link
-              href="/contact"
-              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
             >
-              Contact Us
-            </Link>
-
-            <Link
-              href="/faq"
-              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              FAQ
-            </Link>
-
-            <Link
-              href="/privacy-policy"
-              className="block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              Privacy Policy
+              profile
             </Link>
           </div>
         </NavigationMenuContent>

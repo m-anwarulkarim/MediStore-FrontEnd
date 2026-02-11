@@ -1,12 +1,13 @@
+import { serverFetch } from "@/lib/fetch/serverFetch";
 import {
   ApiResponse,
   CreateSellerProfilePayload,
   SellerProfile,
   UpdateSellerProfilePayload,
-} from "@/components/types/sellerProfile.type";
+} from "@/components/types/seller";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 
-export const sellerProfileService = {
+export const sellerService = {
   getMyProfile: async () => {
     return clientFetch<ApiResponse<SellerProfile>>("/api/seller/profile", {
       method: "GET",
@@ -24,6 +25,14 @@ export const sellerProfileService = {
     return clientFetch<ApiResponse<SellerProfile>>("/api/seller/profile", {
       method: "PUT",
       body: JSON.stringify(payload),
+    });
+  },
+};
+
+export const sellerServer = {
+  getMyProfile: async () => {
+    return serverFetch<ApiResponse<SellerProfile>>("api/seller/profile", {
+      method: "GET",
     });
   },
 };

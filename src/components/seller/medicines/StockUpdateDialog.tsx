@@ -41,7 +41,7 @@ export function StockUpdateDialog({
     const next = Number(stock);
 
     if (Number.isNaN(next) || next < 0) {
-      toast.error("Stock অবশ্যই 0 বা তার বেশি হতে হবে");
+      toast.error("Stock must be 0 or greater");
       return;
     }
 
@@ -94,7 +94,7 @@ export function StockUpdateDialog({
               placeholder="e.g. 50"
             />
             <p className="text-xs text-muted-foreground">
-              0 দিলে out of stock হিসেবে ধরা যাবে।
+              Setting it to 0 will be treated as out of stock.
             </p>
           </div>
         </div>

@@ -37,7 +37,7 @@ export default function AddressList({
   const [addresses, setAddresses] = useState<Address[]>(initialAddresses);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  // ✅ always derive default id from state
+  //  always derive default id from state
   const defaultId = useMemo(
     () => addresses.find((a) => a.isDefault)?.id ?? null,
     [addresses],

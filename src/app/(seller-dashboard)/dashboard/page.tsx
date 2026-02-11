@@ -1,14 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/fetch/serverFetch";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { SellerOrdersSummaryCard } from "./components/SellerOrdersSummaryCard";
 import { SellerMedicinesSummaryCard } from "./components/SellerMedicinesSummaryCard";
 import { SellerCategoriesSummaryCard } from "./components/SellerCategoriesSummaryCard";
 import { SellerReviewsSummaryCard } from "./components/SellerReviewsSummaryCard";
+import { getMe } from "@/lib/auth/get-me";
+import { redirect } from "next/navigation";
 
 const SellerPage = async () => {
+  const user = await getMe();
+
+  if (!user) redirect("/login");
+
+  if (user.role === "ADMIN") redirect("/admin");
+  if (user.role !== "SELLER") redirect("/");
+
   const [ordersRes, medicinesRes, categoriesRes, reviewsRes] =
     await Promise.all([
       serverFetch<{ success: boolean; data: any[] }>("/api/orders/seller/all"),

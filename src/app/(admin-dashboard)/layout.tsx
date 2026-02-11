@@ -15,12 +15,14 @@ import {
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
 import { AdminAppSidebar } from "./adminAppSidebar";
+import { requireRole } from "@/lib/auth/require-role";
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requireRole(["ADMIN"]);
   return (
     <SidebarProvider>
       <AdminAppSidebar />

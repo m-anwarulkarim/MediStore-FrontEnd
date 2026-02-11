@@ -17,6 +17,8 @@ import { MedicineFormDialog } from "./MedicineFormDialog";
 import { DeleteMedicineDialog } from "./DeleteMedicineDialog";
 import { StockUpdateDialog } from "./StockUpdateDialog";
 
+import { isValidImageSrc } from "@/lib/safeImage";
+
 export function MedicinesTable({
   medicines,
   onChanged,
@@ -25,7 +27,7 @@ export function MedicinesTable({
   onChanged: () => void;
 }) {
   return (
-    <div className="rounded-2xl border bg-background overflow-hidden">
+    <div className="overflow-hidden rounded-2xl border bg-background">
       <div className="w-full overflow-x-auto">
         <Table>
           <TableHeader>
@@ -56,14 +58,14 @@ export function MedicinesTable({
                 return (
                   <TableRow key={med.id} className="hover:bg-muted/30">
                     <TableCell>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted overflow-hidden">
-                        {thumb ? (
+                      <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-md bg-muted">
+                        {isValidImageSrc(thumb) ? (
                           <Image
                             src={thumb}
                             alt={med.name}
                             width={40}
                             height={40}
-                            className="object-cover"
+                            className="h-10 w-10 object-cover"
                           />
                         ) : (
                           <span className="text-xs opacity-60">N/A</span>
@@ -71,13 +73,17 @@ export function MedicinesTable({
                       </div>
                     </TableCell>
 
-                    <TableCell className="font-medium">{med.name}</TableCell>
+                    <TableCell className="font-medium">
+                      <span className="block max-w-[220px] truncate sm:max-w-none">
+                        {med.name}
+                      </span>
+                    </TableCell>
 
                     <TableCell>
                       <div className="flex flex-col">
                         <span>৳ {med.price}</span>
                         {med.discountPrice != null ? (
-                          <Badge variant="secondary" className="w-fit mt-1">
+                          <Badge variant="secondary" className="mt-1 w-fit">
                             Discount: ৳ {med.discountPrice}
                           </Badge>
                         ) : null}
@@ -85,7 +91,9 @@ export function MedicinesTable({
                     </TableCell>
 
                     <TableCell className="text-sm text-muted-foreground">
-                      {med.manufacturer}
+                      <span className="block max-w-[180px] truncate sm:max-w-none">
+                        {med.manufacturer}
+                      </span>
                     </TableCell>
 
                     <TableCell className="text-sm text-muted-foreground">
@@ -93,7 +101,7 @@ export function MedicinesTable({
                     </TableCell>
 
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
+                      <div className="flex flex-wrap justify-end gap-2">
                         <StockUpdateDialog
                           medicineId={med.id}
                           medicineName={med.name}

@@ -10,6 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 import { cartService } from "@/services/cart/cart.service";
 import {
@@ -28,6 +30,13 @@ type CartItem = {
     discountPrice?: number | string | null;
     image?: string | null;
   };
+};
+
+const isValidImageSrc = (src?: string | null) => {
+  if (!src) return false;
+  if (src.startsWith("http://") || src.startsWith("https://")) return true;
+  if (src.startsWith("/")) return true;
+  return false;
 };
 
 export default function CheckoutPage() {
@@ -94,7 +103,6 @@ export default function CheckoutPage() {
     setIsLoading(false);
   };
 
-  // Safe effect (no cascading warning)
   useEffect(() => {
     let alive = true;
     loadAll(() => alive);
@@ -105,7 +113,7 @@ export default function CheckoutPage() {
   }, []);
 
   // --------------------
-  // Subtotal
+  // Pricing helpers
   // --------------------
   const subtotal = useMemo(() => {
     return cartItems.reduce((sum, item) => {
@@ -115,16 +123,36 @@ export default function CheckoutPage() {
     }, 0);
   }, [cartItems]);
 
+  const deliveryCharge = useMemo(() => {
+    // simple rule (তুমি চাইলে dynamic করতে পারো)
+    // 999+ হলে free
+    return subtotal >= 999 ? 0 : 60;
+  }, [subtotal]);
+
+  const total = useMemo(
+    () => subtotal + deliveryCharge,
+    [subtotal, deliveryCharge],
+  );
+
   // --------------------
   // Create address
   // --------------------
   const handleCreateAddress = async () => {
-    const { fullName, phone, city, area, postalCode, addressLine } = addrForm;
+    const { fullName, phone, city, state, area, postalCode, addressLine } =
+      addrForm;
 
-    // match backend required fields
-    if (!fullName || !phone || !city || !area || !postalCode || !addressLine) {
+    //  match backend required fields (state include করা হলো)
+    if (
+      !fullName.trim() ||
+      !phone.trim() ||
+      !city.trim() ||
+      !state.trim() ||
+      !area.trim() ||
+      !postalCode.trim() ||
+      !addressLine.trim()
+    ) {
       toast.error(
-        "Required: fullName, phone, city, area, postalCode, addressLine",
+        "Required: fullName, phone, city, state, area, postalCode, addressLine",
       );
       return;
     }
@@ -186,7 +214,6 @@ export default function CheckoutPage() {
 
     toast.success("Address deleted");
 
-    // if selected deleted, reset
     if (selectedAddressId === id) {
       setSelectedAddressId("");
     }
@@ -250,8 +277,8 @@ export default function CheckoutPage() {
   // --------------------
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-2xl font-bold mb-1">Checkout</h1>
-      <p className="text-sm text-muted-foreground mb-6">
+      <h1 className="mb-1 text-2xl font-bold">Checkout</h1>
+      <p className="mb-6 text-sm text-muted-foreground">
         Payment method: <span className="font-medium">Cash on Delivery</span>
       </p>
 
@@ -272,44 +299,53 @@ export default function CheckoutPage() {
                 addresses.map((a) => (
                   <div
                     key={a.id}
-                    className={`flex gap-3 rounded-lg border p-3 ${
+                    className={`flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-start ${
                       selectedAddressId === a.id
                         ? "border-primary bg-accent"
                         : ""
                     }`}
                   >
-                    <input
-                      type="radio"
-                      checked={selectedAddressId === a.id}
-                      onChange={() => setSelectedAddressId(a.id)}
-                      className="mt-1 h-4 w-4"
-                    />
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="radio"
+                        checked={selectedAddressId === a.id}
+                        onChange={() => setSelectedAddressId(a.id)}
+                        className="mt-1 h-4 w-4"
+                      />
 
-                    <div className="flex-1">
-                      <p className="font-semibold">
-                        {a.fullName}{" "}
-                        {a.isDefault && (
-                          <span className="ml-2 text-xs text-primary">
-                            (Default)
-                          </span>
-                        )}
-                      </p>
-                      <p className="text-sm text-muted-foreground">{a.phone}</p>
-                      <p className="text-sm">
-                        {a.addressLine}, {a.area ? `${a.area}, ` : ""}
-                        {a.city}
-                        {a.postalCode ? ` - ${a.postalCode}` : ""}
-                      </p>
+                      <div className="flex-1">
+                        <p className="font-semibold">
+                          {a.fullName}{" "}
+                          {a.isDefault && (
+                            <span className="ml-2 text-xs text-primary">
+                              (Default)
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {a.phone}
+                        </p>
+                        <p className="text-sm">
+                          {a.addressLine}, {a.area ? `${a.area}, ` : ""}
+                          {a.city}
+                          {a.postalCode ? ` - ${a.postalCode}` : ""}
+                        </p>
+                      </div>
                     </div>
 
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      disabled={a.isDefault || isDeletingAddressId === a.id}
-                      onClick={() => handleDeleteAddress(a.id, a.isDefault)}
-                    >
-                      {isDeletingAddressId === a.id ? "Deleting..." : "Delete"}
-                    </Button>
+                    <div className="sm:ml-auto">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="w-full sm:w-auto"
+                        disabled={a.isDefault || isDeletingAddressId === a.id}
+                        onClick={() => handleDeleteAddress(a.id, a.isDefault)}
+                      >
+                        {isDeletingAddressId === a.id
+                          ? "Deleting..."
+                          : "Delete"}
+                      </Button>
+                    </div>
                   </div>
                 ))
               )}
@@ -329,6 +365,8 @@ export default function CheckoutPage() {
             <CardHeader>
               <CardTitle>Add New Address</CardTitle>
             </CardHeader>
+
+            {/*  state field + default switch + better responsive grid */}
             <CardContent className="grid gap-3 sm:grid-cols-2">
               <Input
                 placeholder="Full name *"
@@ -344,6 +382,7 @@ export default function CheckoutPage() {
                   setAddrForm((p) => ({ ...p, phone: e.target.value }))
                 }
               />
+
               <Input
                 placeholder="City *"
                 value={addrForm.city}
@@ -351,6 +390,14 @@ export default function CheckoutPage() {
                   setAddrForm((p) => ({ ...p, city: e.target.value }))
                 }
               />
+              <Input
+                placeholder="State/Division *"
+                value={addrForm.state}
+                onChange={(e) =>
+                  setAddrForm((p) => ({ ...p, state: e.target.value }))
+                }
+              />
+
               <Input
                 placeholder="Area *"
                 value={addrForm.area}
@@ -365,6 +412,7 @@ export default function CheckoutPage() {
                   setAddrForm((p) => ({ ...p, postalCode: e.target.value }))
                 }
               />
+
               <Input
                 placeholder="Label (Home/Office)"
                 value={addrForm.label}
@@ -372,6 +420,17 @@ export default function CheckoutPage() {
                   setAddrForm((p) => ({ ...p, label: e.target.value }))
                 }
               />
+
+              <div className="flex items-center gap-3 rounded-md border px-3 py-2 sm:justify-between">
+                <Label className="text-sm">Set as default</Label>
+                <Switch
+                  checked={addrForm.isDefault}
+                  onCheckedChange={(v: any) =>
+                    setAddrForm((p) => ({ ...p, isDefault: Boolean(v) }))
+                  }
+                />
+              </div>
+
               <div className="sm:col-span-2">
                 <Input
                   placeholder="Address line *"
@@ -384,6 +443,7 @@ export default function CheckoutPage() {
                   }
                 />
               </div>
+
               <div className="sm:col-span-2">
                 <Button
                   className="w-full"
@@ -403,25 +463,31 @@ export default function CheckoutPage() {
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {cartItems.map((item) => (
-              <div key={item.id} className="flex gap-3">
-                <div className="relative h-14 w-14 rounded border overflow-hidden">
-                  <Image
-                    src={item.medicine.image || "https://placehold.co/600x400"}
-                    alt={item.medicine.name}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+            {cartItems.map((item) => {
+              const imgSrc = isValidImageSrc(item.medicine.image)
+                ? (item.medicine.image as string)
+                : "https://placehold.co/600x400";
+
+              return (
+                <div key={item.id} className="flex gap-3">
+                  <div className="relative h-14 w-14 overflow-hidden rounded border">
+                    <Image
+                      src={imgSrc}
+                      alt={item.medicine.name}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{item.medicine.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      Qty: {item.quantity}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium">{item.medicine.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    Qty: {item.quantity}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             <Separator />
 
@@ -430,9 +496,18 @@ export default function CheckoutPage() {
               <span>৳ {subtotal.toFixed(2)}</span>
             </div>
 
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Delivery</span>
+              <span>
+                {deliveryCharge === 0
+                  ? "Free"
+                  : `৳ ${deliveryCharge.toFixed(2)}`}
+              </span>
+            </div>
+
             <div className="flex justify-between font-bold">
               <span>Total</span>
-              <span>৳ {subtotal.toFixed(2)}</span>
+              <span>৳ {total.toFixed(2)}</span>
             </div>
 
             <Button
@@ -442,6 +517,10 @@ export default function CheckoutPage() {
             >
               {isPlacing ? "Placing..." : "Place Order (COD)"}
             </Button>
+
+            <p className="text-xs text-muted-foreground">
+              Note: ৹ Subtotal ৳999+ হলে delivery free (example rule)।
+            </p>
           </CardContent>
         </Card>
       </div>

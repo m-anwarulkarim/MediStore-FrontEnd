@@ -30,6 +30,7 @@ type Props = {
 type FormState = {
   fullName: string;
   phone: string;
+  state: string; //  added
   city: string;
   area: string;
   postalCode: string;
@@ -47,11 +48,12 @@ export default function AddressFormDialog({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  //  initialValue থেকে derived defaults (stable)
+  // initialValue থেকে derived defaults (stable)
   const defaults: FormState = useMemo(
     () => ({
       fullName: initialValue?.fullName ?? "",
       phone: initialValue?.phone ?? "",
+      state: (initialValue as any)?.state ?? "", //  added (types এ state না থাকলে safe)
       city: initialValue?.city ?? "",
       area: initialValue?.area ?? "",
       postalCode: initialValue?.postalCode ?? "",
@@ -70,6 +72,7 @@ export default function AddressFormDialog({
   const validate = () => {
     if (!form.fullName.trim()) return "Full name is required";
     if (!form.phone.trim()) return "Phone is required";
+    if (!form.state.trim()) return "State/Division is required"; //  added
     if (!form.city.trim()) return "City is required";
     if (!form.area.trim()) return "Area is required";
     if (!form.postalCode.trim()) return "Postal code is required";
@@ -91,6 +94,7 @@ export default function AddressFormDialog({
     const payload = {
       fullName: form.fullName.trim(),
       phone: form.phone.trim(),
+      state: form.state.trim(), //  added
       city: form.city.trim(),
       area: form.area.trim(),
       postalCode: form.postalCode.trim(),
@@ -155,7 +159,16 @@ export default function AddressFormDialog({
             </div>
           </div>
 
+          {/*  State + City */}
           <div className="grid gap-2 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>State / Division *</Label>
+              <Input
+                value={form.state}
+                onChange={(e) => setField("state", e.target.value)}
+                placeholder="Dhaka"
+              />
+            </div>
             <div className="space-y-2">
               <Label>City *</Label>
               <Input
@@ -164,6 +177,10 @@ export default function AddressFormDialog({
                 placeholder="Dhaka"
               />
             </div>
+          </div>
+
+          {/* Area + Postal */}
+          <div className="grid gap-2 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Area *</Label>
               <Input
@@ -172,9 +189,6 @@ export default function AddressFormDialog({
                 placeholder="Mirpur"
               />
             </div>
-          </div>
-
-          <div className="grid gap-2 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Postal code *</Label>
               <Input
@@ -183,14 +197,16 @@ export default function AddressFormDialog({
                 placeholder="1216"
               />
             </div>
-            <div className="space-y-2">
-              <Label>Address line *</Label>
-              <Input
-                value={form.addressLine}
-                onChange={(e) => setField("addressLine", e.target.value)}
-                placeholder="House, Road..."
-              />
-            </div>
+          </div>
+
+          {/* Address line */}
+          <div className="space-y-2">
+            <Label>Address line *</Label>
+            <Input
+              value={form.addressLine}
+              onChange={(e) => setField("addressLine", e.target.value)}
+              placeholder="House, Road..."
+            />
           </div>
 
           <div className="flex items-center gap-2 pt-2">

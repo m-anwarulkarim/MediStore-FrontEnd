@@ -16,12 +16,14 @@ import {
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
 import ReactQueryProvider from "@/components/provider/ReactQueryProvider";
+import { requireRole } from "@/lib/auth/require-role";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await requireRole(["SELLER"]);
   return (
     <SidebarProvider>
       <AppSidebar />

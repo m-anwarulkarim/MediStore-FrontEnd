@@ -61,7 +61,13 @@ function splitImages(text: string): string[] | undefined {
   const arr = text
     .split(",")
     .map((s) => s.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter(
+      (s) =>
+        s.startsWith("http://") ||
+        s.startsWith("https://") ||
+        s.startsWith("/"),
+    );
 
   return arr.length ? arr : undefined;
 }
