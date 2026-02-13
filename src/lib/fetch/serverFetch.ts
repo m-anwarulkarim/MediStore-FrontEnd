@@ -37,7 +37,6 @@ export async function serverFetch<T = any>(
       headers.set("Content-Type", "application/json");
     }
 
-    // ✅ Forward cookies to backend (Correct & Type Safe way)
     const cookieStore = await cookies();
 
     const cookieHeader = cookieStore

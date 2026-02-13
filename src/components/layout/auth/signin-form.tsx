@@ -49,32 +49,42 @@ export function SignInForm() {
           },
         );
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Invalid email or password");
+        // ✅ safer JSON parse (কখনো কখনো response JSON না-ও হতে পারে)
+        let data: any = null;
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          data = await response.json();
+        } else {
+          const text = await response.text();
+          data = { message: text };
         }
 
-        const user = data.user;
+        if (!response.ok) {
+          throw new Error(data?.message || "Invalid email or password");
+        }
 
-        localStorage.setItem("user", JSON.stringify(user));
+        const user = data?.user;
+
+        // ✅ localStorage only if user আছে
+        if (user) localStorage.setItem("user", JSON.stringify(user));
 
         toast.success("Login successful!");
         formApi.reset();
 
-        // রোল অনুযায়ী রিডাইরেক্ট
+        // ✅ role based redirect
         if (user?.role === "ADMIN") {
-          router.push("/admin");
+          router.replace("/admin");
         } else if (user?.role === "SELLER") {
-          router.push("/dashboard");
+          router.replace("/dashboard");
         } else {
-          router.push("/");
+          router.replace("/");
         }
 
+        // optional
         router.refresh();
       } catch (error: any) {
         console.error("Login error:", error);
-        toast.error(error.message || "Login failed. Please try again.");
+        toast.error(error?.message || "Login failed. Please try again.");
       }
     },
   });
@@ -110,6 +120,7 @@ export function SignInForm() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="you@example.com"
+                    autoComplete="email"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -130,6 +141,7 @@ export function SignInForm() {
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     placeholder="********"
+                    autoComplete="current-password"
                   />
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
@@ -137,18 +149,7 @@ export function SignInForm() {
             }}
           </form.Field>
 
-          <div className="text-right">
-            <Button
-              variant="link"
-              size="sm"
-              asChild
-              className="text-primary hover:underline px-0"
-            >
-              <Link href="/forgot-password">Forgot password?</Link>
-            </Button>
-          </div>
-
-          <Button type="submit" form="signin-form" className="w-full">
+          <Button type="submit" className="w-full">
             Sign In
           </Button>
         </form>
