@@ -25,7 +25,6 @@ export const userApi = {
     });
   },
 
-  //  Optional summary
   summary: async () => {
     return serverFetch<ApiResponse<any>>("api/users/me/profile/summary", {
       method: "GET",

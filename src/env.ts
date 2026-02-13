@@ -1,19 +1,13 @@
-// src/env.ts
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
-export const env = createEnv({
-  server: {
-    BACKEND_URL: z.string().url(),
-  },
-
+export const clientEnv = createEnv({
+  server: {},
   client: {
-    NEXT_PUBLIC_APP_URL: z.string().url(),
-    NEXT_PUBLIC_BACKEND_URL: z.string().url(),
+    NEXT_PUBLIC_APP_URL: z.url(),
+    NEXT_PUBLIC_BACKEND_URL: z.url(),
   },
-
   runtimeEnv: {
-    BACKEND_URL: process.env.BACKEND_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },

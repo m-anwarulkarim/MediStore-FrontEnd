@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { env } from "@/env";
+import { clientEnv } from "@/env";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -40,7 +40,7 @@ export function SignInForm() {
     onSubmit: async ({ value, formApi }) => {
       try {
         const response = await fetch(
-          `${env.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-in/email`,
+          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-in/email`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -57,7 +57,6 @@ export function SignInForm() {
 
         const user = data.user;
 
-        // ✅ ব্রাউজারে ইউজার ডাটা সেভ করা (যাতে useAuth কাজ করে)
         localStorage.setItem("user", JSON.stringify(user));
 
         toast.success("Login successful!");
@@ -72,7 +71,6 @@ export function SignInForm() {
           router.push("/");
         }
 
-        // রিফ্রেশ করলে নেভবার সাথে সাথে ড্যাশবোর্ড বাটন দেখাবে
         router.refresh();
       } catch (error: any) {
         console.error("Login error:", error);

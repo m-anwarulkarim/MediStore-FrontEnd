@@ -18,7 +18,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { env } from "@/env";
+import { clientEnv } from "@/env";
 // <-- ensure you have this in env.ts
 
 // Validation schema
@@ -47,7 +47,7 @@ export function RegisterForm() {
 
       try {
         const response = await fetch(
-          `${env.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-up/email`,
+          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-up/email`,
           {
             method: "POST",
             headers: {
