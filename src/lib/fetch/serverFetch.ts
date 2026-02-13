@@ -5,7 +5,11 @@ import { cookies } from "next/headers";
 
 export interface ServerFetchResponse<T> {
   data: T | null;
-  error: any;
+  error: {
+    message: string;
+    details?: any;
+    statusText?: string;
+  } | null;
   status: number;
 }
 
@@ -37,23 +41,21 @@ export async function serverFetch<T = any>(
       headers.set("Content-Type", "application/json");
     }
 
-    const cookieStore = await cookies();
+    // ✅ Works whether cookies() returns value OR Promise
+    const cookieStore = await Promise.resolve(cookies());
 
     const cookieHeader = cookieStore
       .getAll()
       .map((c) => `${c.name}=${c.value}`)
       .join("; ");
 
-    if (cookieHeader) {
-      headers.set("Cookie", cookieHeader);
-    }
+    if (cookieHeader) headers.set("Cookie", cookieHeader);
 
     const response = await fetch(finalUrl, {
       ...options,
       headers,
       cache: "no-store",
       next: { revalidate: 0 },
-      credentials: "include",
     });
 
     const contentType = response.headers.get("content-type") || "";
@@ -66,17 +68,30 @@ export async function serverFetch<T = any>(
 
     if (!response.ok) {
       const errorData = await parseBody().catch(() => null);
-      return { data: null, error: errorData, status: response.status };
+
+      return {
+        data: null,
+        error: {
+          message: (errorData as any)?.message || "Request failed",
+          details: errorData,
+          statusText: response.statusText,
+        },
+        status: response.status,
+      };
     }
 
     const data = await parseBody();
+
     return { data, error: null, status: response.status };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Server fetch error:", error);
 
     return {
       data: null,
-      error: error instanceof Error ? error.message : "Network error",
+      error: {
+        message: error instanceof Error ? error.message : "Network error",
+        details: error,
+      },
       status: 500,
     };
   }
