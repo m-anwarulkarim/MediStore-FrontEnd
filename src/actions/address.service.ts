@@ -7,7 +7,7 @@ export type CreateAddressPayload = Omit<Address, "id" | "userId" | "createdAt">;
 
 export type UpdateAddressPayload = Partial<CreateAddressPayload>;
 
-const ADDRESS_BASE = "/api/address";
+const ADDRESS_BASE = "api/address";
 
 export const addressApi = {
   // SSR list

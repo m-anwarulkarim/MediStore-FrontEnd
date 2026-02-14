@@ -40,7 +40,7 @@ export function SignInForm() {
     onSubmit: async ({ value, formApi }) => {
       try {
         const response = await fetch(
-          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-in/email`,
+          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}api/auth/sign-in/email`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

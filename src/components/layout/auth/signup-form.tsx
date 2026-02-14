@@ -47,7 +47,7 @@ export function RegisterForm() {
 
       try {
         const response = await fetch(
-          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-up/email`,
+          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}api/auth/sign-up/email`,
           {
             method: "POST",
             headers: {
