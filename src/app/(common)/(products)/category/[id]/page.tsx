@@ -7,7 +7,7 @@ interface PageProps {
 
 const CategoryDetailsPage = async ({ params }: PageProps) => {
   const { data: categoryData } = await serverFetch(
-    `/api/categories/${params.id}`,
+    `api/categories/${params.id}`,
     {
       method: "GET",
     },

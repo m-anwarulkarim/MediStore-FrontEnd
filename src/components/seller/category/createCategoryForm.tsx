@@ -81,7 +81,7 @@ export function CreateCategoryForm() {
       };
 
       try {
-        const { data, error, status } = await clientFetch("/api/categories", {
+        const { data, error, status } = await clientFetch("api/categories", {
           method: "POST",
           body: JSON.stringify(payload),
         });

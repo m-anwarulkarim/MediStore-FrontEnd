@@ -59,7 +59,7 @@ export function UpdateMedicineStockForm({
       setIsPending(true);
       try {
         const { status, error } = await clientFetch(
-          `/api/medicines/${initialData.medicineId}`,
+          `api/medicines/${initialData.medicineId}`,
           {
             method: "PATCH",
             body: JSON.stringify({ stock: Number(value.stock) }),

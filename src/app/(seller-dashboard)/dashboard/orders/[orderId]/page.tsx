@@ -10,7 +10,7 @@ export default async function SellerOrderDetailsPage({
 }) {
   const { orderId } = await params;
 
-  const { data, error } = await serverFetch(`/api/orders/${orderId}`, {
+  const { data, error } = await serverFetch(`api/orders/${orderId}`, {
     method: "GET",
     cache: "no-store",
   });

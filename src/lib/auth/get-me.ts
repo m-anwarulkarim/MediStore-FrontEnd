@@ -12,7 +12,7 @@ export type MeUser = {
 
 export async function getMe(): Promise<MeUser | null> {
   const res = await serverFetch<{ success: boolean; data: MeUser }>(
-    "/api/auth",
+    "api/auth",
     {
       method: "GET",
     },

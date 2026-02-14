@@ -3,7 +3,7 @@ import MedicineCard from "@/components/products/productPage";
 import { serverFetch } from "@/lib/fetch/serverFetch";
 
 const MedicinesPage = async () => {
-  const response = await serverFetch("/api/medicines", {
+  const response = await serverFetch("api/medicines", {
     method: "GET",
     cache: "no-store",
   });

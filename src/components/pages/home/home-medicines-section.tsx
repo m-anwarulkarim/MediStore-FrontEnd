@@ -3,7 +3,7 @@ import MedicineCard from "@/components/products/productPage";
 import { serverFetch } from "@/lib/fetch/serverFetch";
 
 export default async function HomeMedicinesSection() {
-  const res = await serverFetch("/api/medicines?page=1&limit=8", {
+  const res = await serverFetch("api/medicines?page=1&limit=8", {
     method: "GET",
     cache: "no-store",
   });

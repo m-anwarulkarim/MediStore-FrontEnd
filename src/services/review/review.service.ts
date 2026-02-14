@@ -11,7 +11,7 @@ export const reviewService = {
   // Public
   getMedicineReviewsServer: async (medicineId: string) => {
     return serverFetch<ApiResponse<Review[]>>(
-      `/api/reviews/medicine/${medicineId}`,
+      `api/reviews/medicine/${medicineId}`,
       {
         method: "GET",
       },
@@ -21,7 +21,7 @@ export const reviewService = {
   // Client (for react-query)
   getMedicineReviews: async (medicineId: string) => {
     return clientFetch<ApiResponse<Review[]>>(
-      `/api/reviews/medicine/${medicineId}`,
+      `api/reviews/medicine/${medicineId}`,
       {
         method: "GET",
       },
@@ -29,7 +29,7 @@ export const reviewService = {
   },
 
   createReview: async (payload: CreateReviewPayload) => {
-    return clientFetch<ApiResponse<Review>>(`/api/reviews`, {
+    return clientFetch<ApiResponse<Review>>(`api/reviews`, {
       method: "POST",
       body: JSON.stringify(payload),
     });

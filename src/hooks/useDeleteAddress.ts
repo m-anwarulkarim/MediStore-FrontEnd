@@ -10,7 +10,7 @@ export function useDeleteAddress() {
 
   return useMutation({
     mutationFn: async (addressId: string) => {
-      return apiFetch<DeleteRes>(`/api/addresses/${addressId}`, {
+      return apiFetch<DeleteRes>(`api/addresses/${addressId}`, {
         method: "DELETE",
       });
     },

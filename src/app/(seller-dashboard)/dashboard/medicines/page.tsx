@@ -107,7 +107,7 @@ export default function SellerMedicinesPage() {
 
   const loadCategories = useCallback(async () => {
     try {
-      const res = await clientFetch<CategoriesApiResponse>("/api/categories", {
+      const res = await clientFetch<CategoriesApiResponse>("api/categories", {
         method: "GET",
       });
       if (res.error) throw new Error(res.error.message);
@@ -133,7 +133,7 @@ export default function SellerMedicinesPage() {
       if (categoryId !== "all") query.set("categoryId", categoryId);
 
       const res = await clientFetch<SellerMedicinesResponse>(
-        `/api/medicines/seller/my?${query.toString()}`,
+        `api/medicines/seller/my?${query.toString()}`,
         { method: "GET" },
       );
 

@@ -47,7 +47,7 @@ export function StockUpdateDialog({
 
     setSaving(true);
     try {
-      const res = await clientFetch(`/api/medicines/${medicineId}/stock`, {
+      const res = await clientFetch(`api/medicines/${medicineId}/stock`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stock: next }),

@@ -28,7 +28,7 @@ const MedicineList = ({ initialMedicines }: MedicineListProps) => {
     if (!confirmDelete) return;
 
     try {
-      const { error } = await clientFetch(`/api/medicines/${id}`, {
+      const { error } = await clientFetch(`api/medicines/${id}`, {
         method: "DELETE",
       });
 

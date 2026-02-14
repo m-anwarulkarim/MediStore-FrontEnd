@@ -66,11 +66,11 @@ export function CategoryFormDialog({
 
       const res =
         mode === "create"
-          ? await clientFetch("/api/categories", {
+          ? await clientFetch("api/categories", {
               method: "POST",
               body: JSON.stringify(payload),
             })
-          : await clientFetch(`/api/categories/${initial?.id}`, {
+          : await clientFetch(`api/categories/${initial?.id}`, {
               method: "PATCH",
               body: JSON.stringify(payload),
             });

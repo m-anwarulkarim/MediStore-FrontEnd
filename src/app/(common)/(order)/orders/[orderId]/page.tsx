@@ -66,7 +66,7 @@ export default function OrderDetailsPage() {
     (async () => {
       setLoading(true);
 
-      const res = await orderService.getOrderDetails(orderId); // GET /api/orders/:orderId
+      const res = await orderService.getOrderDetails(orderId);
 
       if (!alive) return;
 

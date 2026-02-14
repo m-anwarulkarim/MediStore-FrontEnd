@@ -5,7 +5,7 @@ export const orderService = {
     addressId: string;
     customerNote?: string;
   }) => {
-    return clientFetch("/api/orders", {
+    return clientFetch("api/orders", {
       method: "POST",
       body: JSON.stringify(payload),
     });
@@ -15,7 +15,7 @@ export const orderService = {
 
   // =========================
   getMyOrders: async () => {
-    return clientFetch("/api/orders/my-orders", {
+    return clientFetch("api/orders/my-orders", {
       method: "GET",
     });
   },
@@ -24,7 +24,7 @@ export const orderService = {
   // Order details
   // =========================
   getOrderDetails: async (orderId: string) => {
-    return clientFetch(`/api/orders/${orderId}`, {
+    return clientFetch(`api/orders/${orderId}`, {
       method: "GET",
     });
   },

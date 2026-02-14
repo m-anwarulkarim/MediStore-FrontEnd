@@ -29,7 +29,7 @@ export default function SellerOrdersPage() {
       const qs = status === "ALL" ? "" : `?status=${status}`;
 
       const res = await clientFetch<SellerOrdersApiResponse>(
-        `/api/orders/seller/all${qs}`,
+        `api/orders/seller/all${qs}`,
         {
           method: "GET",
         },

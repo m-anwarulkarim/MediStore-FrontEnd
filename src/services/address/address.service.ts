@@ -35,14 +35,14 @@ type ApiResponse<T> = {
 
 export const addressService = {
   getMyAddresses: async () => {
-    return clientFetch<ApiResponse<Address[]>>("/api/address/my-addresses", {
+    return clientFetch<ApiResponse<Address[]>>("api/address/my-addresses", {
       method: "GET",
     });
   },
 
   //  Create address
   createAddress: async (payload: CreateAddressPayload) => {
-    return clientFetch<ApiResponse<Address>>("/api/address", {
+    return clientFetch<ApiResponse<Address>>("api/address", {
       method: "POST",
       body: JSON.stringify(payload),
     });
