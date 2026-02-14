@@ -19,7 +19,7 @@ export const userApi = {
 
   //  CSR update
   updateMe: async (payload: UpdateProfilePayload) => {
-    return clientFetch<ApiResponse<UserMe>>("/api/users/me/profile", {
+    return clientFetch<ApiResponse<UserMe>>("api/users/me/profile", {
       method: "PATCH",
       body: JSON.stringify(payload),
     });

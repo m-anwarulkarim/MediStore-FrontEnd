@@ -27,7 +27,7 @@ export default function OrdersPage() {
 
     (async () => {
       setLoading(true);
-      const res = await orderService.getMyOrders(); // should call GET /api/orders/my-orders
+      const res = await orderService.getMyOrders();
       if (!alive) return;
 
       setLoading(false);

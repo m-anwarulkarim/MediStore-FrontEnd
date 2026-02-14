@@ -151,7 +151,7 @@ export function MedicineFormDialog({
   const loadCategories = async () => {
     setCatLoading(true);
     try {
-      const res = await clientFetch<CategoriesApiResponse>("/api/categories", {
+      const res = await clientFetch<CategoriesApiResponse>("api/categories", {
         method: "GET",
       });
       if (res.error) throw new Error(res.error.message);
@@ -205,7 +205,7 @@ export function MedicineFormDialog({
         const id = initial?.id;
         if (!id) throw new Error("Medicine ID missing");
 
-        const res = await clientFetch(`/api/medicines/${id}`, {
+        const res = await clientFetch(`/pi/medicines/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -214,7 +214,7 @@ export function MedicineFormDialog({
         if ((res as any).error) throw new Error((res as any).error.message);
         toast.success("Medicine updated successfully!");
       } else {
-        const res = await clientFetch(`/api/medicines`, {
+        const res = await clientFetch(`api/medicines`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

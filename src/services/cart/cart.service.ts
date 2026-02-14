@@ -7,25 +7,25 @@ export type AddToCartPayload = {
 
 export const cartService = {
   addToCart: async (payload: AddToCartPayload) => {
-    return clientFetch("/api/cart", {
+    return clientFetch("api/cart", {
       method: "POST",
       body: JSON.stringify(payload),
     });
   },
 
   getMyCart: async () => {
-    return clientFetch("/api/cart", { method: "GET" });
+    return clientFetch("api/cart", { method: "GET" });
   },
 
   updateQty: async (cartItemId: string, quantity: number) => {
-    return clientFetch(`/api/cart/${cartItemId}`, {
+    return clientFetch(`api/cart/${cartItemId}`, {
       method: "PUT",
       body: JSON.stringify({ quantity }),
     });
   },
 
   deleteItem: async (cartItemId: string) => {
-    return clientFetch(`/api/cart/${cartItemId}`, {
+    return clientFetch(`api/cart/${cartItemId}`, {
       method: "DELETE",
     });
   },

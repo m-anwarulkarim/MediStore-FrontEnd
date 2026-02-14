@@ -45,17 +45,14 @@ export default function AdminOrdersPage() {
   const load = async (nextPage = page) => {
     setLoading(true);
     try {
-      const res = await clientFetch<OrdersApiResponse>(
-        "/api/orders/admin/all",
-        {
-          method: "GET",
-          queryParams: {
-            page: nextPage,
-            limit,
-            searchTerm: filters.search, // backend param নাম ভিন্ন হলে বদলাও
-          },
+      const res = await clientFetch<OrdersApiResponse>("api/orders/admin/all", {
+        method: "GET",
+        queryParams: {
+          page: nextPage,
+          limit,
+          searchTerm: filters.search, // backend param নাম ভিন্ন হলে বদলাও
         },
-      );
+      });
 
       if (res.error) throw new Error(res.error.message);
 

@@ -33,7 +33,7 @@ export function RoleSelect({
     setLoading(true);
 
     try {
-      await clientFetch(`/api/admin/users/${userId}/role`, {
+      await clientFetch(`api/admin/users/${userId}/role`, {
         method: "PATCH",
         body: JSON.stringify({ role }),
       });

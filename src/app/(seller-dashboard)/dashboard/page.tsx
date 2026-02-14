@@ -19,12 +19,10 @@ const SellerPage = async () => {
 
   const [ordersRes, medicinesRes, categoriesRes, reviewsRes] =
     await Promise.all([
-      serverFetch<{ success: boolean; data: any[] }>("/api/orders/seller/all"),
-      serverFetch<{ success: boolean; data: any[] }>(
-        "/api/medicines/seller/my",
-      ),
-      serverFetch<{ success: boolean; data: any[] }>("/api/categories"),
-      serverFetch<{ success: boolean; data: any[] }>("/api/reviews/seller/all"),
+      serverFetch<{ success: boolean; data: any[] }>("api/orders/seller/all"),
+      serverFetch<{ success: boolean; data: any[] }>("api/medicines/seller/my"),
+      serverFetch<{ success: boolean; data: any[] }>("api/categories"),
+      serverFetch<{ success: boolean; data: any[] }>("api/reviews/seller/all"),
     ]);
 
   const totalOrders = ordersRes.data?.data?.length ?? 0;

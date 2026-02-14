@@ -16,7 +16,7 @@ async function getMedicine(id: string): Promise<Medicine | null> {
   const base = process.env.NEXT_PUBLIC_BACKEND_URL;
   if (!base) return null;
 
-  const res = await fetch(`${base}/api/medicines/${id}`, {
+  const res = await fetch(`${base}api/medicines/${id}`, {
     cache: "no-store",
     credentials: "include",
   });

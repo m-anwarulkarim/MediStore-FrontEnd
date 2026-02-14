@@ -35,7 +35,7 @@ export function OrderStatusSelect({
 }) {
   const updateStatus = async (status: OrderStatus) => {
     try {
-      const res = await clientFetch(`/api/orders/${orderId}/status`, {
+      const res = await clientFetch(`api/orders/${orderId}/status`, {
         method: "PATCH",
         body: JSON.stringify({ status }),
       });

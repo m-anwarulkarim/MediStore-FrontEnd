@@ -75,7 +75,7 @@ export function UpdateCategoryForm({ initialData }: UpdateCategoryFormProps) {
 
       try {
         const { data, error, status } = await clientFetch(
-          `/api/categories/${initialData.id}`,
+          `api/categories/${initialData.id}`,
           {
             method: "PATCH",
             body: JSON.stringify(payload),

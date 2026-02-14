@@ -25,7 +25,7 @@ export default function AdminCategoriesPage() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await clientFetch<CategoriesApiResponse>("/api/categories", {
+      const res = await clientFetch<CategoriesApiResponse>("api/categories", {
         method: "GET",
       });
 

@@ -33,7 +33,7 @@ export function DeleteMedicineDialog({
   const handleDelete = async () => {
     setLoading(true);
     try {
-      const res = await clientFetch(`/api/medicines/${medicineId}`, {
+      const res = await clientFetch(`api/medicines/${medicineId}`, {
         method: "DELETE",
       });
 

@@ -19,8 +19,8 @@ export default async function ProductsPage({
 }) {
   const sp = await searchParams;
 
-  const categoriesRes = await serverFetch("/api/categories", { method: "GET" });
-  const manufacturersRes = await serverFetch("/api/manufacturers", {
+  const categoriesRes = await serverFetch("api/categories", { method: "GET" });
+  const manufacturersRes = await serverFetch("api/manufacturers", {
     method: "GET",
   });
 
@@ -34,7 +34,7 @@ export default async function ProductsPage({
   if (sp.minPrice) query.set("minPrice", sp.minPrice);
   if (sp.maxPrice) query.set("maxPrice", sp.maxPrice);
 
-  const productsRes = await serverFetch(`/api/products?${query.toString()}`, {
+  const productsRes = await serverFetch(`api/products?${query.toString()}`, {
     method: "GET",
   });
 

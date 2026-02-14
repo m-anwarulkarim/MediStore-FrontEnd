@@ -50,7 +50,7 @@ export const addressService = {
 
   //  Update address
   updateAddress: async (id: string, payload: Partial<CreateAddressPayload>) => {
-    return clientFetch<ApiResponse<Address>>(`/api/address/${id}`, {
+    return clientFetch<ApiResponse<Address>>(`api/address/${id}`, {
       method: "PUT",
       body: JSON.stringify(payload),
     });
@@ -58,7 +58,7 @@ export const addressService = {
 
   //  Delete address
   deleteAddress: async (id: string) => {
-    return clientFetch<ApiResponse<Address>>(`/api/address/${id}`, {
+    return clientFetch<ApiResponse<Address>>(`api/address/${id}`, {
       method: "DELETE",
     });
   },

@@ -36,7 +36,7 @@ export const reviewService = {
   },
 
   updateReview: async (reviewId: string, payload: UpdateReviewPayload) => {
-    return clientFetch<ApiResponse<Review>>(`/api/reviews/${reviewId}`, {
+    return clientFetch<ApiResponse<Review>>(`api/reviews/${reviewId}`, {
       method: "PATCH",
       body: JSON.stringify(payload),
     });
@@ -44,7 +44,7 @@ export const reviewService = {
 
   // Seller
   getSellerReviews: async () => {
-    return clientFetch<ApiResponse<Review[]>>(`/api/reviews/seller/all`, {
+    return clientFetch<ApiResponse<Review[]>>(`api/reviews/seller/all`, {
       method: "GET",
     });
   },
@@ -52,7 +52,7 @@ export const reviewService = {
   // Admin
   deleteReview: async (reviewId: string) => {
     return clientFetch<ApiResponse<{ message: string }>>(
-      `/api/reviews/${reviewId}`,
+      `api/reviews/${reviewId}`,
       {
         method: "DELETE",
       },
@@ -61,7 +61,7 @@ export const reviewService = {
 
   getMyReview: async (orderId: string, medicineId: string) => {
     return clientFetch<ApiResponse<Review | null>>(
-      `/api/reviews/my?orderId=${orderId}&medicineId=${medicineId}`,
+      `api/reviews/my?orderId=${orderId}&medicineId=${medicineId}`,
       { method: "GET" },
     );
   },

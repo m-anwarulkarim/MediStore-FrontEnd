@@ -21,7 +21,7 @@ export function StatusSelect({
 }) {
   const updateStatus = async (status: UserStatus) => {
     try {
-      const res = await clientFetch(`/api/admin/users/${userId}`, {
+      const res = await clientFetch(`api/admin/users/${userId}`, {
         method: "PATCH",
         body: JSON.stringify({ status }),
       });

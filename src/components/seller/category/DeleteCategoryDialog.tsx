@@ -27,7 +27,7 @@ export function DeleteCategoryDialog({
 }) {
   const onDelete = async () => {
     try {
-      const res = await clientFetch(`/api/categories/${categoryId}`, {
+      const res = await clientFetch(`api/categories/${categoryId}`, {
         method: "DELETE",
       });
 

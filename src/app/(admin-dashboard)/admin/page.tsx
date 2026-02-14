@@ -11,10 +11,10 @@ import { MedicinesSummaryCard } from "./dashboard/components/MedicinesSummaryCar
 
 const AdminPage = async () => {
   const [usersRes, ordersRes, medicinesRes, categoriesRes] = await Promise.all([
-    serverFetch<{ success: boolean; data: any[] }>("/api/admin/users"),
-    serverFetch<{ success: boolean; data: any[] }>("/api/orders/admin/all"),
-    serverFetch<{ success: boolean; data: any[] }>("/api/medicines"),
-    serverFetch<{ success: boolean; data: any[] }>("/api/categories"),
+    serverFetch<{ success: boolean; data: any[] }>("api/admin/users"),
+    serverFetch<{ success: boolean; data: any[] }>("api/orders/admin/all"),
+    serverFetch<{ success: boolean; data: any[] }>("api/medicines"),
+    serverFetch<{ success: boolean; data: any[] }>("api/categories"),
   ]);
 
   const totalUsers = usersRes.data?.data?.length ?? 0;

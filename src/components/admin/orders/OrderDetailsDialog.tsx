@@ -25,7 +25,7 @@ export function OrderDetailsDialog({ orderId }: { orderId: string }) {
     setLoading(true);
     try {
       const res = await clientFetch<{ success: boolean; data: Order }>(
-        `/api/orders/${orderId}`,
+        `api/orders/${orderId}`,
         { method: "GET" },
       );
       if (res.error) throw new Error(res.error.message);

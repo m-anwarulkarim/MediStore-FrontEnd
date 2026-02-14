@@ -35,7 +35,7 @@ export default function ProductDetailsPage() {
     const load = async () => {
       setIsLoading(true);
 
-      const res = await clientFetch<Product>(`/api/medicines/${id}`, {
+      const res = await clientFetch<Product>(`api/medicines/${id}`, {
         method: "GET",
       });
 

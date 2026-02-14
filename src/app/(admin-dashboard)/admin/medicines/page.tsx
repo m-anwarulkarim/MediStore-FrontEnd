@@ -49,7 +49,7 @@ export default function AdminMedicinesPage() {
   const load = async (nextPage = page) => {
     setLoading(true);
     try {
-      const res = await clientFetch<MedicinesApiResponse>("/api/medicines", {
+      const res = await clientFetch<MedicinesApiResponse>("api/medicines", {
         method: "GET",
         queryParams: {
           page: nextPage,

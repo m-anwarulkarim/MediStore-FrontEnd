@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
     setLoading(true);
     try {
       const res = await clientFetch<{ success: boolean; data: User[] }>(
-        "/api/admin/users",
+        "api/admin/users",
         { method: "GET" },
       );
 
