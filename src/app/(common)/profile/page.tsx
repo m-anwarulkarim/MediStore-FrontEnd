@@ -19,10 +19,10 @@ export default function CustomerProfilePage() {
     let mounted = true;
 
     (async () => {
-      const [meRes, addrRes, summaryRes] = await Promise.all([
+      const [meRes, addrRes, /*summaryRes */] = await Promise.all([
         userApi.me(),
         addressApi.myAddresses(),
-        userApi.summary(),
+        // userApi.summary(), // future use
       ]);
 
       if (!mounted) return;

@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Loader2, Pencil, PlusCircle, AlertCircle } from "lucide-react";
+import { Loader2, Pencil, PlusCircle } from "lucide-react";
 
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import { Button } from "@/components/ui/button";
