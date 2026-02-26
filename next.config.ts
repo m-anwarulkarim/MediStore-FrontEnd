@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone", // 🔥 Docker এর জন্য best
+
   images: {
     remotePatterns: [
       {
@@ -10,12 +12,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "images.pexels.com",
-      },
-      {
-        protocol: "http",
-        hostname: "exampl.com",
-        port: "",
-        pathname: "/**",
       },
     ],
   },

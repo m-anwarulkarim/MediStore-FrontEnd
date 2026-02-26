@@ -1,4 +1,4 @@
-import { serverFetch } from "@/lib/fetch/serverFetch";
+// import { serverFetch } from "@/lib/fetch/serverFetch";
 import {
   ApiResponse,
   CreateSellerProfilePayload,
@@ -29,10 +29,3 @@ export const sellerService = {
   },
 };
 
-export const sellerServer = {
-  getMyProfile: async () => {
-    return serverFetch<ApiResponse<SellerProfile>>("api/seller/profile", {
-      method: "GET",
-    });
-  },
-};

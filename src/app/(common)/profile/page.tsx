@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { userApi } from "@/services/user/user.service";
 import { addressApi } from "@/actions/address.service";
 
@@ -5,16 +10,38 @@ import ProfileHeader from "@/components/account/ProfileHeader";
 import ProfileInfoCard from "@/components/account/ProfileInfoCard";
 import AddressList from "@/components/account/AddressList";
 
-export default async function AdminProfilePage() {
-  const [meRes, addrRes /*summaryRes*/] = await Promise.all([
-    userApi.me(),
-    addressApi.myAddresses(),
-    userApi.summary(),
-  ]);
+export default function CustomerProfilePage() {
+  const [me, setMe] = useState<any>(null);
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const me = meRes.data?.data ?? null;
-  const addresses = addrRes.data?.data ?? [];
-  // const summary = summaryRes.data?.data ?? null;
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const [meRes, addrRes, summaryRes] = await Promise.all([
+        userApi.me(),
+        addressApi.myAddresses(),
+        userApi.summary(),
+      ]);
+
+      if (!mounted) return;
+
+      setMe(meRes.data?.data ?? null);
+      setAddresses(addrRes.data?.data ?? []);
+      // const summary = summaryRes.data?.data ?? null; // future use
+
+      setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return <div className="p-6 text-sm text-muted-foreground">Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -35,7 +62,7 @@ export default async function AdminProfilePage() {
             </div>
           </div>
 
-          {/* Right Column (Future use / summary) */}
+          {/* Right Column */}
           <div className="lg:col-span-4">
             <div className="sticky top-24 space-y-4">
               <div className="rounded-xl border bg-background p-5 shadow-sm">

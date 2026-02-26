@@ -1,12 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useEffect, useState } from "react";
+
 import SellerProfileHeader from "@/components/seller/SellerProfileHeader";
 import SellerProfileForm from "@/components/seller/SellerProfileForm";
 import SellerProfileCard from "@/components/seller/SellerProfileCard";
-import { sellerServer } from "@/services/seller/sellerProfile.service";
+import { sellerService } from "@/services/seller/sellerProfile.service";
 
-export default async function SellerProfilePage() {
-  const res = await sellerServer.getMyProfile();
+import type { SellerProfile } from "@/components/types/seller";
 
-  const profile = res.data?.data ?? null;
+export default function SellerProfilePage() {
+  const [profile, setProfile] = useState<SellerProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const res = await sellerService.getMyProfile();
+
+      if (!mounted) return;
+
+      setProfile(res.data?.data ?? null);
+      setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 text-sm text-muted-foreground">
+        Loading seller profile...
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8">

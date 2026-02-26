@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiResponse, UserMe } from "@/components/types/api/user";
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import { serverFetch } from "@/lib/fetch/serverFetch";
 
 export type UpdateProfilePayload = {
   name?: string;
@@ -10,14 +9,14 @@ export type UpdateProfilePayload = {
 };
 
 export const userApi = {
-  //  SSR load
+  // ✅ CSR load (JWT Bearer auto যাবে)
   me: async () => {
-    return serverFetch<ApiResponse<UserMe>>("api/users/me/profile", {
+    return clientFetch<ApiResponse<UserMe>>("api/users/me/profile", {
       method: "GET",
     });
   },
 
-  //  CSR update
+  // ✅ CSR update
   updateMe: async (payload: UpdateProfilePayload) => {
     return clientFetch<ApiResponse<UserMe>>("api/users/me/profile", {
       method: "PATCH",
@@ -25,9 +24,13 @@ export const userApi = {
     });
   },
 
+  // ✅ CSR summary
   summary: async () => {
-    return serverFetch<ApiResponse<any>>("api/users/me/profile/summary", {
-      method: "GET",
-    });
+    return clientFetch<ApiResponse<any>>(
+      "api/users/me/profile/summary",
+      {
+        method: "GET",
+      },
+    );
   },
 };

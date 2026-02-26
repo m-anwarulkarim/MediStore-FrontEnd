@@ -1,13 +1,40 @@
-import { redirect } from "next/navigation";
-import { getMe, Role } from "./get-me";
-export async function requireRole(allowed: Role[]) {
-  const user = await getMe();
+"use client";
 
-  if (!user) redirect("/login");
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getMe, Role, type MeUser } from "./get-me";
 
-  if (!allowed.includes(user.role)) {
-    redirect("/");
-  }
+export function useRequireRole(allowed: Role[]) {
+  const router = useRouter();
+  const [user, setUser] = useState<MeUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  return user;
+  useEffect(() => {
+    let mounted = true;
+
+    (async () => {
+      const me = await getMe();
+
+      if (!mounted) return;
+
+      if (!me) {
+        router.replace("/login");
+        return;
+      }
+
+      if (!allowed.includes(me.role)) {
+        router.replace("/");
+        return;
+      }
+
+      setUser(me);
+      setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [allowed, router]);
+
+  return { user, loading };
 }

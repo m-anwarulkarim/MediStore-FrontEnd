@@ -1,4 +1,5 @@
-import { serverFetch } from "@/lib/fetch/serverFetch";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { clientFetch } from "@/lib/fetch/clientFetch";
 
 export type Role = "ADMIN" | "SELLER" | "CUSTOMER";
 
@@ -11,11 +12,9 @@ export type MeUser = {
 };
 
 export async function getMe(): Promise<MeUser | null> {
-  const res = await serverFetch<{ success: boolean; data: MeUser }>(
+  const res = await clientFetch<{ success: boolean; data: MeUser }>(
     "api/auth",
-    {
-      method: "GET",
-    },
+    { method: "GET" },
   );
 
   return res.data?.data ?? null;

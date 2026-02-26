@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { tokenStore } from "@/lib/token";
+
 export interface ClientFetchResponse<T> {
   data: T | null;
   error: {
@@ -45,6 +47,11 @@ export async function clientFetch<T = any>(
 
     const headers = new Headers(options.headers);
 
+    const accessToken = tokenStore.get();
+    if (accessToken && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${accessToken}`);
+    }
+
     const bodyIsFormData =
       typeof FormData !== "undefined" && options.body instanceof FormData;
 
@@ -67,6 +74,13 @@ export async function clientFetch<T = any>(
     };
 
     if (!response.ok) {
+      // ✅ NEW: token expired/invalid হলে clear করে দাও
+      if (response.status === 401) {
+        tokenStore.clear();
+        // optional:
+        // localStorage.removeItem("user");
+      }
+
       const errorData = await parseBody().catch(() => null);
 
       return {
@@ -81,7 +95,6 @@ export async function clientFetch<T = any>(
     }
 
     const data = await parseBody();
-
     return { data, error: null, status: response.status };
   } catch (error: any) {
     if (process.env.NODE_ENV === "development") {

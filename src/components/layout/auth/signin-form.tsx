@@ -20,6 +20,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { clientEnv } from "@/env";
+import { tokenStore } from "@/lib/token"; // ✅ add
 
 const formSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -39,39 +40,59 @@ export function SignInForm() {
     },
     onSubmit: async ({ value, formApi }) => {
       try {
-        const response = await fetch(
+        // ✅ 1) better-auth login
+        const loginRes = await fetch(
           `${clientEnv.NEXT_PUBLIC_BACKEND_URL}api/auth/sign-in/email`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(value),
-            credentials: "include",
+            credentials: "include", // MUST
           },
         );
 
-        // ✅ safer JSON parse (কখনো কখনো response JSON না-ও হতে পারে)
-        let data: any = null;
-        const contentType = response.headers.get("content-type") || "";
-        if (contentType.includes("application/json")) {
-          data = await response.json();
-        } else {
-          const text = await response.text();
-          data = { message: text };
+        const loginCT = loginRes.headers.get("content-type") || "";
+        const loginData = loginCT.includes("application/json")
+          ? await loginRes.json()
+          : { message: await loginRes.text() };
+
+        if (!loginRes.ok) {
+          throw new Error(loginData?.message || "Invalid email or password");
         }
 
-        if (!response.ok) {
-          throw new Error(data?.message || "Invalid email or password");
+        // ✅ 2) Issue JWT from session
+        const jwtRes = await fetch(
+          `${clientEnv.NEXT_PUBLIC_BACKEND_URL}api/jwt/from-session`,
+          {
+            method: "POST",
+            credentials: "include", // MUST
+          },
+        );
+
+        const jwtCT = jwtRes.headers.get("content-type") || "";
+        const jwtData = jwtCT.includes("application/json")
+          ? await jwtRes.json()
+          : { message: await jwtRes.text() };
+
+        if (!jwtRes.ok) {
+          throw new Error(jwtData?.message || "Failed to issue JWT");
         }
 
-        const user = data?.user;
+        // ✅ 3) Save access token
+        if (jwtData?.accessToken) {
+          tokenStore.set(jwtData.accessToken);
+        }
 
-        // ✅ localStorage only if user আছে
-        if (user) localStorage.setItem("user", JSON.stringify(user));
+        // ✅ 4) Save user
+        const user = jwtData?.user || loginData?.user;
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user));
+        }
 
         toast.success("Login successful!");
         formApi.reset();
 
-        // ✅ role based redirect
+        // ✅ 5) Role based redirect
         if (user?.role === "ADMIN") {
           router.replace("/admin");
         } else if (user?.role === "SELLER") {
@@ -80,7 +101,6 @@ export function SignInForm() {
           router.replace("/");
         }
 
-        // optional
         router.refresh();
       } catch (error: any) {
         console.error("Login error:", error);

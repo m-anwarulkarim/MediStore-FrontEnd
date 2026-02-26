@@ -15,15 +15,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { HomeIcon } from "lucide-react";
-import ReactQueryProvider from "@/components/provider/ReactQueryProvider";
-import { requireRole } from "@/lib/auth/require-role";
+import SellerGuard from "./SellerGuard"; // ✅ add
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await requireRole(["SELLER"]);
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -48,10 +46,11 @@ export default async function DashboardLayout({
             </BreadcrumbList>
           </Breadcrumb>
         </header>
+
         <main className="flex-1 overflow-y-auto p-4">
-          <div className="flex flex-col gap-4">
-            <ReactQueryProvider>{children}</ReactQueryProvider>
-          </div>
+          <SellerGuard>
+            <div className="flex flex-col gap-4">{children}</div>
+          </SellerGuard>
         </main>
       </SidebarInset>
     </SidebarProvider>
